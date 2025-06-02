@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AI Audio Analyzer</title>
+    <title>AI Audio Supervisor - Nanny & Caregiver Monitor</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Sharp" rel="stylesheet">
@@ -14,22 +14,31 @@
         }
         .material-icons-sharp {
             font-size: 24px;
+            vertical-align: middle; 
         }
         .dark body {
-            background-color: #1f2937; /* gray-800 */
-            color: #f3f4f6; /* gray-100 */
+            background-color: #1f2937; /* dark:bg-gray-800 */
+            color: #f3f4f6; /* dark:text-gray-100 */
         }
-        .dark .bg-white { background-color: #374151; /* gray-700 */ }
-        .dark .bg-gray-50 { background-color: #4b5563; /* gray-600 */ }
-        .dark .bg-gray-100 { background-color: #374151; /* gray-700 */ }
-        .dark .text-gray-700 { color: #d1d5db; /* gray-300 */ }
-        .dark .text-gray-900 { color: #f9fafb; /* gray-50 */ }
-        .dark .text-gray-500 { color: #9ca3af; /* gray-400 */ }
-        .dark .border-gray-300 { border-color: #4b5563; /* gray-600 */ }
-        .dark .hover\:bg-gray-100:hover { background-color: #4b5563; /* gray-600 */ }
+        .dark .bg-white { background-color: #374151; } /* dark:bg-gray-700 */
+        .dark .bg-gray-50 { background-color: #374151; } /* Adjusted for consistency dark:bg-gray-700/50 or similar */
+        .dark .bg-gray-100 { background-color: #4b5563; } /* Accordion header dark:bg-gray-600 */
+        .dark .bg-gray-200 { background-color: #505a6a; } 
+        .dark .text-gray-700 { color: #d1d5db; } /* dark:text-gray-300 */
+        .dark .text-gray-900 { color: #f9fafb; } /* dark:text-gray-50 */
+        .dark .text-gray-500 { color: #9ca3af; } /* dark:text-gray-400 */
+        .dark .text-gray-600 { color: #d1d5db; } /* dark:text-gray-300, for overall assessment text */
+        .dark .border-gray-200 { border-color: #4b5563; } 
+        .dark .border-gray-300 { border-color: #4b5563; }
+        .dark .hover\:bg-gray-100:hover { background-color: #4b5563; }
         .dark .hover\:bg-gray-200:hover { background-color: #505a6a; }
         
-        /* Custom select styling */
+        /* Ensure good contrast for text in light mode for specific sections */
+        .light .overall-assessment-block .text-gray-600 { color: #4b5563; } /* Tailwind gray-600 */
+        .light .overall-assessment-block .text-blue-700 { color: #1d4ed8; } /* Tailwind blue-700 */
+         .light .overall-assessment-block .text-gray-700 { color: #374151; } /* Tailwind gray-700 for summary_text */
+
+
         select {
             -webkit-appearance: none;
             -moz-appearance: none;
@@ -37,22 +46,13 @@
             background-repeat: no-repeat;
             background-position: right 0.75rem center;
             background-size: 1em;
-            padding-right: 2.5rem; /* Ensure space for arrow */
+            padding-right: 2.5rem; 
         }
         .light select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
         }
         .dark select {
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
-        }
-
-        .dark input[type="file"]::file-selector-button {
-            background-color: #4b5563; /* gray-600 */
-            color: #f3f4f6; /* gray-100 */
-            border-color: #6b7280; /* gray-500 */
-        }
-        .dark input[type="file"]::file-selector-button:hover {
-            background-color: #6b7280; /* gray-500 */
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%239ca3af' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
         }
 
         @keyframes pulse {
@@ -79,141 +79,313 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        textarea::-webkit-scrollbar, #resultsArea::-webkit-scrollbar {
+        textarea::-webkit-scrollbar, #resultsArea::-webkit-scrollbar, .alert-container::-webkit-scrollbar {
             width: 8px;
         }
-        textarea::-webkit-scrollbar-track, #resultsArea::-webkit-scrollbar-track {
-            background: #f1f1f1;
+        textarea::-webkit-scrollbar-track, #resultsArea::-webkit-scrollbar-track, .alert-container::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Light scrollbar track */
             border-radius: 10px;
         }
-        .dark textarea::-webkit-scrollbar-track, .dark #resultsArea::-webkit-scrollbar-track {
-            background: #2d3748;
+        .dark textarea::-webkit-scrollbar-track, .dark #resultsArea::-webkit-scrollbar-track, .dark .alert-container::-webkit-scrollbar-track {
+            background: #2d3748; /* Dark scrollbar track */
         }
-        textarea::-webkit-scrollbar-thumb, #resultsArea::-webkit-scrollbar-thumb {
-            background: #888;
+        textarea::-webkit-scrollbar-thumb, #resultsArea::-webkit-scrollbar-thumb, .alert-container::-webkit-scrollbar-thumb {
+            background: #888; /* Light scrollbar thumb */
             border-radius: 10px;
         }
-        .dark textarea::-webkit-scrollbar-thumb, .dark #resultsArea::-webkit-scrollbar-thumb {
+        .dark textarea::-webkit-scrollbar-thumb, .dark #resultsArea::-webkit-scrollbar-thumb, .dark .alert-container::-webkit-scrollbar-thumb {
+            background: #555; /* Dark scrollbar thumb */
+        }
+        textarea::-webkit-scrollbar-thumb:hover, #resultsArea::-webkit-scrollbar-thumb:hover, .alert-container::-webkit-scrollbar-thumb:hover {
             background: #555;
         }
-        textarea::-webkit-scrollbar-thumb:hover, #resultsArea::-webkit-scrollbar-thumb:hover {
-            background: #555;
-        }
-        .dark textarea::-webkit-scrollbar-thumb:hover, .dark #resultsArea::-webkit-scrollbar-thumb:hover {
+        .dark textarea::-webkit-scrollbar-thumb:hover, .dark #resultsArea::-webkit-scrollbar-thumb:hover, .dark .alert-container::-webkit-scrollbar-thumb:hover {
             background: #777;
         }
+
+        .audio-visualizer { height: 60px; background: linear-gradient(45deg, #3b82f6, #06b6d4); border-radius: 8px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+        .audio-bars { display: flex; align-items: end; justify-content: center; height: 40px; gap: 2px; }
+        .audio-bar { width: 4px; background: rgba(255, 255, 255, 0.8); border-radius: 2px; transition: height 0.1s ease; }
+
+        .alert-critical { border-left: 4px solid #dc2626; background-color: #fef2f2; } .dark .alert-critical { background-color: #7f1d1d; color: #fecaca; }
+        .alert-warning { border-left: 4px solid #f59e0b; background-color: #fffbeb; } .dark .alert-warning { background-color: #78350f; color: #fed7aa;}
+        .alert-info { border-left: 4px solid #3b82f6; background-color: #eff6ff; } .dark .alert-info { background-color: #1e3a8a; color: #bfdbfe;}
+        .alert-positive { border-left: 4px solid #10b981; background-color: #f0fdf4; } .dark .alert-positive { background-color: #064e3b; color: #a7f3d0;}
+
+        .timeline-item { border-left: 2px solid #e5e7eb; position: relative; } .dark .timeline-item { border-left-color: #4b5563; }
+        .timeline-marker { position: absolute; left: -6px; top: 8px; width: 10px; height: 10px; border-radius: 50%; background-color: #3b82f6; }
+        .timeline-marker.critical { background-color: #dc2626; } .timeline-marker.warning { background-color: #f59e0b; } .timeline-marker.positive { background-color: #10b981; }
+
+        .expandable-content { max-height: 60px; overflow: hidden; transition: max-height 0.3s ease-in-out; } /* Smoother transition */
+        .expandable-content.expanded { max-height: 500px; }
+
+        .time-display { font-family: 'Monaco', 'Menlo', 'Consolas', monospace; background-color: #1f2937; color: #10b981; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem; }
+        .dark .time-display { background-color: #000; }
+
+        .drop-zone { border: 2px dashed #cbd5e1; border-radius: 0.5rem; text-align: center; cursor: pointer; transition: border-color 0.2s ease-in-out, background-color 0.2s ease-in-out; }
+        .drop-zone label { padding: 1rem; }
+        .drop-zone:hover, .drop-zone.dragover { border-color: #3b82f6; background-color: #eff6ff; }
+        .dark .drop-zone { border-color: #4b5563; } .dark .drop-zone:hover, .dark .drop-zone.dragover { border-color: #60a5fa; background-color: #1e3a8a; }
+        .drop-zone-icon { font-size: 2.5rem; color: #9ca3af; margin-bottom: 0.25rem; } .dark .drop-zone-icon { color: #6b7280; }
+        .drop-zone-text-main { font-weight: 500; color: #374151; } .dark .drop-zone-text-main { color: #d1d5db; }
+        .drop-zone-text-secondary { font-size: 0.875rem; color: #6b7280; } .dark .drop-zone-text-secondary { color: #9ca3af; }
+        #audioFile { opacity: 0; position: absolute; width: 0.1px; height: 0.1px; overflow: hidden; z-index: -1; }
     </style>
 </head>
 <body class="bg-gray-50 text-gray-900 min-h-screen flex flex-col items-center justify-center p-4 selection:bg-blue-500 selection:text-white">
 
-    <div class="w-full max-w-3xl bg-white shadow-xl rounded-lg p-6 md:p-8">
+    <div class="w-full max-w-6xl bg-white shadow-xl rounded-lg p-6 md:p-8">
         <header class="flex justify-between items-center mb-6">
-            <h1 class="text-2xl md:text-3xl font-bold text-blue-600">AI Audio Analyzer</h1>
-            <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <span class="material-icons-sharp" id="themeIcon">light_mode</span>
-            </button>
+            <div>
+                <h1 class="text-2xl md:text-3xl font-bold text-blue-600">AI Audio Supervisor</h1>
+                <p class="text-sm text-gray-500 dark:text-gray-400">Advanced Monitoring for Nanny & Caregiver Supervision</p>
+            </div>
+            <div class="flex items-center gap-4">
+                <div id="recordingTimer" class="time-display hidden">
+                    ⏱️ <span id="timerDisplay">00:00:00</span>
+                </div>
+                <button id="themeToggle" class="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    <span class="material-icons-sharp" id="themeIcon">light_mode</span>
+                </button>
+            </div>
         </header>
 
-        <div class="mb-4">
-            <label for="micSelect" class="block text-sm font-medium text-gray-700 mb-1">Select Microphone (uses system/browser default):</label>
-            <select id="micSelect" class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white">
-                <option value="">Default Microphone</option>
-            </select>
-            <p class="text-xs text-gray-500 mt-1">List populates after granting microphone permission. Actual mic used by browser may depend on system settings.</p>
+        <div class="bg-gray-100 dark:bg-gray-700/30 rounded-lg p-4 mb-6"> <h2 class="text-md font-semibold mb-3 text-blue-700 dark:text-blue-300">🌍 Language & Context Settings</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label for="inputLanguage" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Audio Language:</label>
+                    <select id="inputLanguage" class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white dark:bg-gray-600 dark:text-gray-200">
+                        <option value="pt">🇧🇷 Português</option>
+                        <option value="en" selected>🇺🇸 English</option>
+                        <option value="es">🇪🇸 Español</option>
+                        <option value="fr">🇫🇷 Français</option>
+                        <option value="de">🇩🇪 Deutsch</option>
+                        <option value="it">🇮🇹 Italiano</option>
+                        <option value="auto">🌐 Auto-detect</option>
+                    </select>
+                </div>
+                <div>
+                    <label for="supervisorContext" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Supervision Context:</label>
+                    <select id="supervisorContext" class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white dark:bg-gray-600 dark:text-gray-200">
+                        <option value="nanny_supervisor">👶 Nanny Supervision</option>
+                        <option value="caregiver_supervisor">👴 Elderly Caregiver</option>
+                        <option value="music_analysis">🎵 Music Vocal Analysis</option>
+                        <option value="therapy_monitor">🧠 Therapy Session Monitor</option>
+                        <option value="education_monitor">📚 Educational Content Monitor</option>
+                        <option value="customer_service_quality">📞 Customer Service Quality</option>
+                    </select>
+                </div>
+                <div id="alertSensitivityContainer"> 
+                    <label for="alertSensitivity" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Alert Sensitivity:</label>
+                    <select id="alertSensitivity" class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white dark:bg-gray-600 dark:text-gray-200">
+                        <option value="low">🟢 Low - Major issues only</option>
+                        <option value="medium" selected>🟡 Medium - Balanced monitoring</option>
+                        <option value="high">🔴 High - Detailed supervision</option>
+                    </select>
+                </div>
+            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <button id="recordToggleButton" class="flex items-center justify-center w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-red-400">
-                <span class="material-icons-sharp mr-2" id="recordIcon">mic</span>
-                <span id="recordButtonText">Start Recording</span>
+        <div class="mb-6 rounded-lg border border-gray-200 dark:border-gray-700">
+            <button id="apiConfigToggle" type="button" class="flex items-center justify-between w-full p-3 font-medium text-left text-gray-700 bg-gray-100 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700 focus:outline-none focus:ring-1 focus:ring-blue-500 rounded-t-lg">
+                <span class="flex items-center"><span class="material-icons-sharp mr-2">vpn_key</span> API Configuration</span>
+                <span class="material-icons-sharp" id="apiConfigToggleIcon">expand_more</span>
             </button>
-            <button id="transcribeFileButton" class="flex items-center justify-center w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-green-400 disabled:opacity-50 disabled:cursor-not-allowed" disabled>
-                <span class="material-icons-sharp mr-2">audiotrack</span>
-                <span>Transcribe Uploaded File</span>
+            <div id="apiConfigContent" class="p-4 border-t border-gray-200 dark:border-gray-700 hidden bg-white dark:bg-gray-700/30 rounded-b-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3 mb-4">
+                    <div>
+                        <label for="transcriptionService" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Transcription Service:</label>
+                        <select id="transcriptionService" class="block w-full p-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-600 dark:text-gray-200">
+                            <option value="groq">Groq (Whisper)</option>
+                            <option value="openai">OpenAI Whisper API</option>
+                            <option value="gemini">Google Gemini (for Transcription)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="transcriptionApiKeyInput" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Transcription API Key:</label>
+                        <input type="password" id="transcriptionApiKeyInput" placeholder="Key for selected Transcription Service" class="block w-full p-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-600 dark:text-gray-200">
+                    </div>
+                </div>
+                <div class="border-t border-gray-200 dark:border-gray-600 pt-4">
+                     <p class="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Analysis Service Configuration</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-x-4 gap-y-3">
+                        <div>
+                            <label for="analysisServiceSelect" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">Analysis Service:</label>
+                            <select id="analysisServiceSelect" class="block w-full p-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-600 dark:text-gray-200">
+                                <option value="gemini">Google Gemini (Default)</option>
+                                <option value="groq">Groq (Experimental)</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="analysisApiKeyInput" class="block text-xs font-medium text-gray-700 dark:text-gray-300 mb-1">API Key for Selected Analysis Service:</label>
+                            <input type="password" id="analysisApiKeyInput" placeholder="YOUR_GEMINI_API_KEY_HERE" class="block w-full p-2 border border-gray-300 rounded-md text-sm shadow-sm focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-600 dark:text-gray-200">
+                        </div>
+                    </div>
+                </div>
+                <p class="text-xs text-yellow-600 dark:text-yellow-400 mt-3">⚠️ Ensure correct API keys are provided for the respective services. Settings are saved locally in your browser.</p>
+            </div>
+        </div>
+
+
+        <div class="bg-gray-100 dark:bg-gray-700/30 rounded-lg p-6 mb-6"> <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">🎙️ Live Monitoring</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="micSelect" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Select Microphone:</label>
+                    <select id="micSelect" data-mic-permanently-disabled="true" class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white dark:bg-gray-600 dark:text-gray-200" disabled>
+                        <option value="">Loading microphones...</option>
+                    </select>
+                </div>
+                <div class="flex items-end">
+                    <button id="testMicButton" class="flex items-center justify-center w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2.5 px-4 rounded-lg shadow transition-colors duration-150 disabled:opacity-50" disabled>
+                        <span class="material-icons-sharp mr-2">volume_up</span>
+                        <span>Test Microphone</span>
+                    </button>
+                </div>
+            </div>
+            <div id="micTestVisualizer" class="audio-visualizer mb-4 hidden">
+                <div class="audio-bars" id="audioBars"></div>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <button id="recordToggleButton" class="flex items-center justify-center w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-150 disabled:opacity-50" disabled>
+                    <span class="material-icons-sharp mr-2" id="recordIcon">mic</span>
+                    <span id="recordButtonText">Start Monitoring</span>
+                </button>
+                <button id="stopAllButton" class="flex items-center justify-center w-full bg-gray-500 hover:bg-gray-600 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-150">
+                    <span class="material-icons-sharp mr-2">stop</span>
+                    <span>Stop All</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="bg-gray-100 dark:bg-gray-700/30 rounded-lg p-6 mb-6"> <h2 class="text-lg font-semibold mb-4 text-gray-800 dark:text-gray-200">📁 Audio File Analysis</h2>
+            
+            <div id="dropZone" class="drop-zone mb-4">
+                <label for="audioFile" class="flex flex-col items-center justify-center w-full cursor-pointer">
+                    <span class="material-icons-sharp drop-zone-icon">cloud_upload</span>
+                    <p class="drop-zone-text-main">Drag & drop your audio file here</p>
+                    <p class="drop-zone-text-secondary mb-2">or click to select a file</p>
+                    <span id="fileNameDisplay" class="text-sm text-blue-600 dark:text-blue-400"></span>
+                </label>
+                <input type="file" id="audioFile" accept="audio/*"> 
+            </div>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1 mb-4 text-center">Supports MP3, WAV, OGG, M4A, and other common audio formats</p>
+
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label for="audioTimestamp" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Audio Recording Time (Optional):</label>
+                    <input type="datetime-local" id="audioTimestamp" class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white dark:bg-gray-600 dark:text-gray-200">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">When was this audio recorded? (Auto-filled from file if possible)</p>
+                </div>
+                <div>
+                    <label for="audioContextInput" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Audio Context (Optional):</label>
+                    <input type="text" id="audioContextInput" placeholder="e.g., Morning playtime, Lunch supervision..." class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white dark:bg-gray-600 dark:text-gray-200">
+                    <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">Additional context about the recording</p>
+                </div>
+            </div>
+            
+            <button id="transcribeFileButton" class="flex items-center justify-center w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-150 disabled:opacity-50" disabled>
+                <span class="material-icons-sharp mr-2">upload_file</span>
+                <span id="transcribeFileText">TRANSCRIBE AUDIO FILE</span>
+                <div id="fileTranscribeLoader" class="loader ml-2 hidden"></div>
             </button>
         </div>
 
         <div class="mb-6">
-            <label for="audioFile" class="block text-sm font-medium text-gray-700 mb-1">Or Upload Audio File (MP3, WAV, OGG, etc.):</label>
-            <input type="file" id="audioFile" accept="audio/*" class="block w-full text-sm text-gray-500 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:text-sm file:font-semibold file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100 dark:file:bg-gray-600 dark:file:text-gray-50 dark:hover:file:bg-gray-500 transition-colors duration-150 cursor-pointer border border-gray-300 rounded-lg">
-            <audio id="audioPlayer" controls class="w-full mt-2 hidden"></audio>
-            <p id="fileInfo" class="text-xs text-gray-500 mt-1"></p>
-            <p class="text-xs text-amber-600 dark:text-amber-400 mt-1">Note: Transcribing uploaded files relies on playing the audio and capturing system output. True direct file transcription is not possible with this browser-based tool.</p>
+            <label for="transcriptArea" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">📝 Transcript:</label>
+            <textarea id="transcriptArea" rows="8" class="w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y bg-white text-gray-800 dark:bg-gray-600 dark:text-gray-100" placeholder="Your transcript will appear here, or you can type/paste text manually..."></textarea>
+            <p id="statusMessage" class="text-sm text-gray-600 dark:text-gray-400 mt-2 min-h-[20px]">Ready to start! Select your language and context, then begin monitoring or upload a file.</p>
         </div>
 
-        <div class="mb-6">
-            <label for="analysisContext" class="block text-sm font-medium text-gray-700 mb-1">Analysis Context:</label>
-            <select id="analysisContext" class="block w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white">
-                <option value="nanny">Nanny Monitoring</option>
-                <option value="lecture">Lecture Summary</option>
-                <option value="elder_care">Elder Care Conversation</option>
-                <option value="business_meeting">Business Meeting Recap</option>
-                <option value="customer_service">Customer Service Call</option>
-                <option value="journaling">Personal Journaling (Voice Diary)</option>
-                <option value="language_learning">Language Learning Practice (English)</option>
-                <option value="therapy_self_reflection">Therapy Session (Self-Reflection)</option>
-                <option value="general">General Summary & Highlights</option>
-            </select>
-        </div>
-
-        <div class="mb-6">
-            <label for="transcriptArea" class="block text-sm font-medium text-gray-700 mb-1">Transcript:</label>
-            <textarea id="transcriptArea" rows="8" class="w-full p-2.5 border border-gray-300 rounded-lg shadow-sm focus:ring-blue-500 focus:border-blue-500 resize-y bg-white text-gray-700" placeholder="Your audio transcript will appear here... You can also paste text."></textarea>
-            <p id="statusMessage" class="text-sm text-gray-500 mt-1 h-5"></p>
-        </div>
-
-        <button id="analyzeButton" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center" disabled>
-            <span class="material-icons-sharp mr-2">psychology</span>
-            <span>Analyze Transcript</span>
+        <button id="analyzeButton" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-semibold py-3 px-4 rounded-lg shadow transition-colors duration-150 focus:outline-none focus:ring-2 focus:ring-purple-500 disabled:opacity-50 mb-6" disabled>
+            <span class="material-icons-sharp mr-2">graphic_eq</span>
+            <span>Analyze & Monitor</span>
             <div id="analysisLoader" class="loader ml-2 hidden"></div>
         </button>
 
-        <div id="resultsContainer" class="mt-8 hidden">
-            <h2 class="text-xl font-semibold mb-3 text-gray-900">Analysis Results:</h2>
-            <div id="resultsArea" class="bg-gray-100 p-4 rounded-lg shadow max-h-96 overflow-y-auto text-gray-700 prose prose-sm dark:prose-invert dark:bg-gray-700 dark:text-gray-200">
+        <div id="resultsContainer" class="grid grid-cols-1 lg:grid-cols-2 gap-6 hidden">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 text-red-600 dark:text-red-400 flex items-center">
+                    <span class="material-icons-sharp mr-2">warning</span>
+                    Tone & Behavior Alerts
+                </h2>
+                <div id="toneAlertsArea" class="alert-container max-h-96 overflow-y-auto space-y-3">
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">No alerts detected yet. Analysis results will appear here.</p>
                 </div>
+            </div>
+
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-lg p-6">
+                <h2 class="text-xl font-semibold mb-4 text-blue-600 dark:text-blue-400 flex items-center">
+                    <span class="material-icons-sharp mr-2">timeline</span>
+                    Interaction Timeline
+                </h2>
+                <div id="interactionSummariesArea" class="alert-container max-h-96 overflow-y-auto space-y-4">
+                    <p class="text-gray-500 dark:text-gray-400 text-sm">Timeline summaries will appear here after analysis.</p>
+                </div>
+            </div>
         </div>
         
         <div id="messageModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center hidden z-50 p-4">
             <div class="relative mx-auto p-5 border w-full max-w-md shadow-lg rounded-md bg-white dark:bg-gray-800">
                 <div class="mt-3 text-center">
-                    <div id="modalIconContainer" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-500 mb-3">
-                        </div>
+                    <div id="modalIconContainer" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-blue-100 dark:bg-blue-500 mb-3"></div>
                     <h3 id="modalTitle" class="text-lg leading-6 font-medium text-gray-900 dark:text-gray-100"></h3>
                     <div class="mt-2 px-7 py-3">
                         <p id="modalMessage" class="text-sm text-gray-500 dark:text-gray-300"></p>
                     </div>
                     <div class="items-center px-4 py-3">
-                        <button id="modalCloseButton" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-300">
+                        <button id="modalCloseButton" class="px-4 py-2 bg-blue-500 text-white text-base font-medium rounded-md w-full shadow-sm hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
                             OK
                         </button>
                     </div>
                 </div>
             </div>
         </div>
-
     </div>
 
     <script>
         // --- DOM Elements ---
         const themeToggle = document.getElementById('themeToggle');
         const themeIcon = document.getElementById('themeIcon');
+        const inputLanguage = document.getElementById('inputLanguage');
+        const supervisorContext = document.getElementById('supervisorContext');
+        const alertSensitivity = document.getElementById('alertSensitivity');
+        const alertSensitivityContainer = document.getElementById('alertSensitivityContainer');
+        
+        const apiConfigToggle = document.getElementById('apiConfigToggle');
+        const apiConfigToggleIcon = document.getElementById('apiConfigToggleIcon');
+        const apiConfigContent = document.getElementById('apiConfigContent');
+        const transcriptionService = document.getElementById('transcriptionService');
+        const transcriptionApiKeyInput = document.getElementById('transcriptionApiKeyInput');
+        const analysisServiceSelect = document.getElementById('analysisServiceSelect'); 
+        const analysisApiKeyInput = document.getElementById('analysisApiKeyInput');
+
         const micSelect = document.getElementById('micSelect');
+        const testMicButton = document.getElementById('testMicButton');
+        const micTestVisualizer = document.getElementById('micTestVisualizer');
+        const audioBars = document.getElementById('audioBars');
         const recordToggleButton = document.getElementById('recordToggleButton');
         const recordIcon = document.getElementById('recordIcon');
         const recordButtonText = document.getElementById('recordButtonText');
-        const transcribeFileButton = document.getElementById('transcribeFileButton');
+        const stopAllButton = document.getElementById('stopAllButton');
+        const recordingTimer = document.getElementById('recordingTimer');
+        const timerDisplay = document.getElementById('timerDisplay');
+        
+        const dropZone = document.getElementById('dropZone');
         const audioFile = document.getElementById('audioFile');
-        const audioPlayer = document.getElementById('audioPlayer');
-        const fileInfo = document.getElementById('fileInfo');
-        const analysisContextSelect = document.getElementById('analysisContext');
+        const fileNameDisplay = document.getElementById('fileNameDisplay');
+        const audioTimestamp = document.getElementById('audioTimestamp');
+        const audioContextInput = document.getElementById('audioContextInput'); 
+        
+        const transcribeFileButton = document.getElementById('transcribeFileButton');
+        const fileTranscribeLoader = document.getElementById('fileTranscribeLoader');
         const transcriptArea = document.getElementById('transcriptArea');
         const statusMessage = document.getElementById('statusMessage');
         const analyzeButton = document.getElementById('analyzeButton');
         const analysisLoader = document.getElementById('analysisLoader');
         const resultsContainer = document.getElementById('resultsContainer');
-        const resultsArea = document.getElementById('resultsArea');
-
+        const toneAlertsArea = document.getElementById('toneAlertsArea');
+        const interactionSummariesArea = document.getElementById('interactionSummariesArea');
         const messageModal = document.getElementById('messageModal');
         const modalIconContainer = document.getElementById('modalIconContainer');
         const modalTitle = document.getElementById('modalTitle');
@@ -221,635 +393,1027 @@
         const modalCloseButton = document.getElementById('modalCloseButton');
 
         // --- App State ---
-        let recognition;
-        let isRecording = false; 
-        let isTranscribingFile = false; 
-        let finalTranscript = '';
+        let recognition = null;
+        let isRecording = false;
+        let isTesting = false;
+        let currentStream = null;
         let currentSelectedMicId = '';
+        let finalTranscript = '';
+        let audioContextObj = null; 
+        let analyser = null;
+        let testAnimationId = null;
+        let recordingStartTime = null;
+        let timerInterval = null;
+        let segmentedTranscript = []; 
+        let speechRecognitionInitialized = false; 
 
-        // --- Speech Recognition Setup ---
-        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
-        if (SpeechRecognition) {
-            recognition = new SpeechRecognition();
-            recognition.continuous = true;
-            recognition.interimResults = true;
-            recognition.lang = 'en-US';
+        const languageMap = { 'pt': 'pt-BR', 'en': 'en-US', 'es': 'es-ES', 'fr': 'fr-FR', 'de': 'de-DE', 'it': 'it-IT', 'auto': 'en-US' };
 
-            recognition.onstart = () => {
-                isRecording = true;
-                analyzeButton.disabled = true;
-                if (isTranscribingFile) {
-                    recordToggleButton.disabled = true; // Disable mic recording during file transcription
-                    transcribeFileButton.disabled = true;
-                    transcribeFileButton.innerHTML = `<span class="material-icons-sharp mr-2">hourglass_empty</span> Transcribing...`;
-                    statusMessage.textContent = 'Transcribing uploaded audio...';
-                } else { // Microphone recording
-                    recordToggleButton.classList.add('recording-active');
-                    recordIcon.textContent = 'mic_off';
-                    recordButtonText.textContent = 'Stop Recording';
-                    transcribeFileButton.disabled = true; 
-                    statusMessage.textContent = 'Listening... Speak into your microphone.';
-                }
-            };
-
-            recognition.onresult = (event) => {
-                let interimTranscript = '';
-                let currentFinal = ''; // Accumulates final results for this event
-                for (let i = event.resultIndex; i < event.results.length; ++i) {
-                    if (event.results[i].isFinal) {
-                        currentFinal += event.results[i][0].transcript + ' '; // Add space after each final segment
-                    } else {
-                        interimTranscript += event.results[i][0].transcript;
-                    }
-                }
-                
-                // Append new final results to the existing finalTranscript
-                // and update the textarea with the combined final and current interim.
-                if (currentFinal) {
-                    finalTranscript += currentFinal;
-                }
-                transcriptArea.value = finalTranscript + interimTranscript;
-                
-                transcriptArea.scrollTop = transcriptArea.scrollHeight;
-                checkAnalyzeButtonState();
-            };
-            
-            recognition.onerror = (event) => {
-                console.error('Speech recognition error:', event.error, event.message);
-                let errorMessage = `Speech recognition error: ${event.error}.`;
-                if (event.message) errorMessage += ` ${event.message}`;
-
-                if (event.error === 'no-speech') {
-                    errorMessage = 'No speech was detected. Please try again.';
-                } else if (event.error === 'audio-capture') {
-                    errorMessage = 'Audio capture failed. Ensure microphone is working and permissions are granted.';
-                } else if (event.error === 'not-allowed') {
-                    errorMessage = 'Microphone access denied. Please allow microphone access in browser settings.';
-                }
-                statusMessage.textContent = errorMessage;
-                showMessage('Error', errorMessage, 'error');
-                stopActiveTranscription(); 
-            };
-
-            recognition.onend = () => {
-                if (isRecording) { // If it stopped unexpectedly or was stopped by recognition.stop()
-                    stopActiveTranscription();
-                }
-            };
-        } else {
-            statusMessage.textContent = 'Speech recognition not supported in this browser. Try Chrome.';
-            recordToggleButton.disabled = true;
-            transcribeFileButton.disabled = true;
-            micSelect.disabled = true;
-            showMessage('Unsupported Browser', 'Speech recognition is not supported in this browser. Please try using Google Chrome for the best experience.', 'warning');
+        // --- API Configuration Persistence ---
+        function saveApiSettings() {
+            localStorage.setItem('transcriptionService', transcriptionService.value);
+            localStorage.setItem('transcriptionApiKey', transcriptionApiKeyInput.value);
+            localStorage.setItem('analysisService', analysisServiceSelect.value); 
+            localStorage.setItem('analysisApiKey', analysisApiKeyInput.value);
+            console.log("API Settings Saved");
         }
 
-        // --- Microphone Device Listing ---
-        async function getMicrophoneList() {
-            micSelect.innerHTML = '<option value="">Default Microphone</option>'; // Reset
-            if (navigator.mediaDevices && navigator.mediaDevices.enumerateDevices) {
-                try {
-                    // We need to request permission first to get device labels
-                    await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
-                    const devices = await navigator.mediaDevices.enumerateDevices();
-                    const audioInputDevices = devices.filter(device => device.kind === 'audioinput');
-                    
-                    if (audioInputDevices.length > 0) {
-                        audioInputDevices.forEach((device, index) => {
-                            const option = document.createElement('option');
-                            option.value = device.deviceId;
-                            option.text = device.label || `Microphone ${index + 1}`;
-                            micSelect.appendChild(option);
-                        });
-                        micSelect.disabled = false;
-                    } else {
-                        micSelect.innerHTML = '<option value="">No microphones found</option>';
-                        micSelect.disabled = true;
-                    }
-                } catch (err) {
-                    console.error('Error enumerating audio devices or getting permission:', err);
-                    micSelect.innerHTML = '<option value="">Mic access denied or no mics</option>';
-                    micSelect.disabled = true;
-                    // Don't show a modal here as it might be too intrusive on page load
-                    // statusMessage.textContent = "Could not list microphones. Check permissions.";
-                }
-            } else {
-                micSelect.disabled = true;
-                statusMessage.textContent = "Cannot list microphones: API not supported.";
-            }
+        function loadApiSettings() {
+            const savedTranscriptionService = localStorage.getItem('transcriptionService');
+            const savedTranscriptionApiKey = localStorage.getItem('transcriptionApiKey');
+            const savedAnalysisService = localStorage.getItem('analysisService'); 
+            const savedAnalysisApiKey = localStorage.getItem('analysisApiKey');
+
+            if (savedTranscriptionService) transcriptionService.value = savedTranscriptionService;
+            if (savedTranscriptionApiKey) transcriptionApiKeyInput.value = savedTranscriptionApiKey;
+            if (savedAnalysisService) analysisServiceSelect.value = savedAnalysisService;
+            if (savedAnalysisApiKey) analysisApiKeyInput.value = savedAnalysisApiKey;
+            console.log("API Settings Loaded");
         }
         
-        micSelect.addEventListener('change', (event) => {
-            currentSelectedMicId = event.target.value;
-            // Note: SpeechRecognition API itself doesn't directly accept a deviceId.
-            // The browser uses the system/browser default. This select is mostly informational
-            // or for apps that use getUserMedia directly to capture from a specific mic.
-            // We call getMicrophoneList again to ensure the stream is active for the selected device if possible.
-            // This is a bit of a heuristic.
-            if (currentSelectedMicId) {
-                 navigator.mediaDevices.getUserMedia({ audio: { deviceId: { exact: currentSelectedMicId } }, video: false })
-                    .then(stream => {
-                        // Got the stream, good. We don't directly use this stream with SpeechRecognition API.
-                        // But it might hint the browser. Close the stream immediately.
-                        stream.getTracks().forEach(track => track.stop());
-                    }).catch(err => {
-                        console.warn(`Could not activate selected mic ${currentSelectedMicId}: ${err.message}`);
-                    });
-            }
+        transcriptionService.addEventListener('change', saveApiSettings);
+        transcriptionApiKeyInput.addEventListener('input', saveApiSettings);
+        analysisServiceSelect.addEventListener('change', saveApiSettings); 
+        analysisApiKeyInput.addEventListener('input', saveApiSettings);
+
+
+        // --- Accordion Logic ---
+        apiConfigToggle.addEventListener('click', () => {
+            const isHidden = apiConfigContent.classList.toggle('hidden');
+            apiConfigToggleIcon.textContent = isHidden ? 'expand_more' : 'expand_less';
+            apiConfigToggle.setAttribute('aria-expanded', !isHidden);
         });
 
 
-        // --- Event Listeners ---
-        themeToggle.addEventListener('click', () => {
-            document.documentElement.classList.toggle('dark');
-            if (document.documentElement.classList.contains('dark')) {
-                themeIcon.textContent = 'dark_mode';
-                localStorage.setItem('theme', 'dark');
-            } else {
-                themeIcon.textContent = 'light_mode';
-                localStorage.setItem('theme', 'light');
-            }
-        });
-
-        recordToggleButton.addEventListener('click', () => {
-            if (!SpeechRecognition) {
-                 showMessage('Unsupported Browser', 'Speech recognition is not supported.', 'error');
-                return;
-            }
-            if (isRecording) {
-                stopActiveTranscription();
-            } else {
-                if (audioPlayer.src && !audioPlayer.paused) {
-                    showMessage('Playback Active', 'Audio file is currently playing. Stop it or wait for it to finish before using the microphone.', 'info');
-                    return;
-                }
-                isTranscribingFile = false; 
-                finalTranscript = ''; 
-                transcriptArea.value = '';
-                try {
-                    // SpeechRecognition uses the default mic. The micSelect is mostly informational.
-                    // Calling getUserMedia before might influence the default on some browsers.
-                    if (currentSelectedMicId) {
-                        navigator.mediaDevices.getUserMedia({ audio: { deviceId: { exact: currentSelectedMicId } } })
-                        .then(stream => {
-                            stream.getTracks().forEach(track => track.stop()); // We don't use the stream directly
-                            recognition.start();
-                        })
-                        .catch(err => {
-                            console.warn("Could not switch to selected mic, using default. Error: " + err.message);
-                            recognition.start(); // Fallback to default
-                        });
-                    } else {
-                        recognition.start();
-                    }
-                } catch (e) {
-                    console.error("Error starting mic recognition: ", e);
-                    statusMessage.textContent = 'Failed to start mic recording. Check permissions.';
-                    showMessage('Recording Error', 'Failed to start microphone recording. Please check permissions.', 'error');
-                    updateButtonStates(); // Ensure buttons are reset
-                }
-            }
-        });
-        
-        transcribeFileButton.addEventListener('click', () => {
-            if (!SpeechRecognition || !audioFile.files[0]) {
-                showMessage('Error', 'No audio file selected or speech recognition not supported.', 'warning');
-                return;
-            }
-            if (isRecording) {
-                showMessage('Busy', 'Another recording or transcription is already in progress.', 'info');
-                return;
-            }
-
-            isTranscribingFile = true;
-            finalTranscript = ''; 
-            transcriptArea.value = '';
-            statusMessage.textContent = 'Preparing to transcribe uploaded audio...';
-            
-            // Ensure audio context is available for playback which SpeechRecognition will capture
-            // This doesn't require explicit microphone permission for file transcription itself,
-            // but relies on the browser's ability to capture its own audio output.
-            audioPlayer.play().then(() => {
-                try {
-                    recognition.start();
-                } catch (e) {
-                    console.error("Error starting file transcription recognition: ", e);
-                    statusMessage.textContent = 'Failed to start file transcription. Check console.';
-                    showMessage('Transcription Error', 'Could not start transcription for the file.', 'error');
-                    if (audioPlayer && !audioPlayer.paused) audioPlayer.pause();
-                    isTranscribingFile = false; 
-                    updateButtonStates(); 
-                }
-            }).catch(err => {
-                console.error("Error playing audio file for transcription:", err);
-                statusMessage.textContent = 'Could not play audio file for transcription.';
-                showMessage('Playback Error', 'The selected audio file could not be played.', 'error');
-                isTranscribingFile = false; 
-                updateButtonStates(); 
-            });
-        });
-
-        function stopActiveTranscription() {
-            if (recognition && isRecording) { 
-                recognition.stop(); 
-            }
-            // If recognition.stop() was called, isRecording will be set to false in recognition.onend.
-            // If this function is called for other reasons (e.g. error), ensure states are reset.
-            
-            if (isTranscribingFile && audioPlayer.src && !audioPlayer.paused) {
-                audioPlayer.pause();
-            }
-
-            isRecording = false; // Crucial to set this here
-            isTranscribingFile = false; 
-            
-            updateButtonStates();
-            statusMessage.textContent = 'Transcription stopped.';
-            if (transcriptArea.value.trim() === '') {
-                 statusMessage.textContent += ' No transcript captured.';
-            } else {
-                 statusMessage.textContent += ' Transcript available for analysis.';
-            }
-            checkAnalyzeButtonState();
-        }
-        
-        function updateButtonStates() {
-            if (isRecording) {
-                if (isTranscribingFile) { // File transcription active
-                    recordToggleButton.disabled = true;
-                    transcribeFileButton.innerHTML = `<span class="material-icons-sharp mr-2">hourglass_empty</span> Transcribing...`;
-                    transcribeFileButton.disabled = true;
-                    recordToggleButton.classList.remove('recording-active'); // Not mic recording
-                    recordIcon.textContent = 'mic';
-                    recordButtonText.textContent = 'Start Recording';
-                } else { // Mic recording active
-                    recordToggleButton.classList.add('recording-active');
-                    recordIcon.textContent = 'mic_off';
-                    recordButtonText.textContent = 'Stop Recording';
-                    recordToggleButton.disabled = false;
-                    transcribeFileButton.disabled = true; // Disable file transcription during mic recording
-                }
-            } else { // Not recording anything
-                recordToggleButton.classList.remove('recording-active');
-                recordIcon.textContent = 'mic';
-                recordButtonText.textContent = 'Start Recording';
-                recordToggleButton.disabled = false;
-
-                transcribeFileButton.innerHTML = `<span class="material-icons-sharp mr-2">audiotrack</span> Transcribe Uploaded File`;
-                transcribeFileButton.disabled = !audioFile.files[0]; 
-            }
-            micSelect.disabled = isRecording; // Disable mic selection during any recording
-        }
-
-
-        audioFile.addEventListener('change', (event) => {
-            const file = event.target.files[0];
-            if (file) {
-                if (isRecording) { 
-                    stopActiveTranscription();
-                }
-                const objectURL = URL.createObjectURL(file);
-                audioPlayer.src = objectURL;
-                audioPlayer.classList.remove('hidden');
-                fileInfo.textContent = `Loaded: ${file.name}.`;
-                transcriptArea.value = ''; 
-                finalTranscript = '';
-                statusMessage.textContent = "Audio file loaded. Click 'Transcribe Uploaded File'.";
-            } else { 
-                audioPlayer.src = '';
-                audioPlayer.classList.add('hidden');
-                fileInfo.textContent = '';
-                statusMessage.textContent = "File selection cleared.";
-            }
-            updateButtonStates(); 
-            checkAnalyzeButtonState();
-        });
-
-        audioPlayer.onended = () => {
-            // Called when the audio file finishes playing naturally.
-            // If it was being transcribed, recognition.onend should handle the full stop.
-            if (isRecording && isTranscribingFile) { 
-                statusMessage.textContent = 'Uploaded audio finished playing. Finalizing transcript...';
-                // recognition.stop(); // Let onend handle it to avoid race conditions.
-            }
-        };
-        
-        transcriptArea.addEventListener('input', checkAnalyzeButtonState);
-
-        analyzeButton.addEventListener('click', async () => {
-            const transcript = transcriptArea.value.trim();
-            if (!transcript) {
-                showMessage('No Transcript', 'There is no transcript to analyze. Please record or type some text.', 'warning');
-                return;
-            }
-            const context = analysisContextSelect.value;
-            analysisLoader.classList.remove('hidden');
-            analyzeButton.disabled = true;
-            analyzeButton.querySelector('span:not(.material-icons-sharp)').textContent = 'Analyzing...';
-            try {
-                const analysis = await getAnalysisFromGemini(transcript, context);
-                displayResults(analysis, context);
-            } catch (error) {
-                console.error('Error analyzing transcript:', error);
-                resultsArea.innerHTML = `<p class="text-red-500 dark:text-red-400">Error analyzing transcript: ${error.message}</p>`;
-                showMessage('Analysis Error', `Failed to get analysis: ${error.message}. Check console for details.`, 'error');
-            } finally {
-                analysisLoader.classList.add('hidden');
-                analyzeButton.disabled = false; 
-                analyzeButton.querySelector('span:not(.material-icons-sharp)').textContent = 'Analyze Transcript';
-                resultsContainer.classList.remove('hidden');
-                resultsArea.scrollTop = 0;
-            }
-        });
-
-        // --- Helper Functions ---
-        function checkAnalyzeButtonState() {
-            analyzeButton.disabled = transcriptArea.value.trim() === '';
-        }
-
+        // --- Utility Functions ---
         function showMessage(title, message, type = 'info') {
             modalTitle.textContent = title;
-            modalMessage.innerHTML = message; 
+            modalMessage.textContent = message;
             modalIconContainer.innerHTML = ''; 
+
+            let iconClass = 'bg-blue-100 dark:bg-blue-700';
             let iconName = 'info';
-            let iconColorClass = 'bg-blue-100 text-blue-500 dark:bg-blue-500 dark:text-blue-100';
-            if (type === 'success') {
-                iconName = 'check_circle';
-                iconColorClass = 'bg-green-100 text-green-500 dark:bg-green-500 dark:text-green-100';
+
+            if (type === 'error') {
+                iconClass = 'bg-red-100 dark:bg-red-700';
+                iconName = 'error_outline';
             } else if (type === 'warning') {
-                iconName = 'warning';
-                iconColorClass = 'bg-yellow-100 text-yellow-500 dark:bg-yellow-500 dark:text-yellow-100';
-            } else if (type === 'error') {
-                iconName = 'error';
-                iconColorClass = 'bg-red-100 text-red-500 dark:bg-red-500 dark:text-red-100';
+                iconClass = 'bg-yellow-100 dark:bg-yellow-700';
+                iconName = 'warning_amber';
+            } else if (type === 'success') {
+                iconClass = 'bg-green-100 dark:bg-green-700';
+                iconName = 'check_circle_outline';
             }
+            
+            modalIconContainer.className = `mx-auto flex items-center justify-center h-12 w-12 rounded-full ${iconClass} mb-3`;
             const iconSpan = document.createElement('span');
-            iconSpan.classList.add('material-icons-sharp');
+            iconSpan.className = 'material-icons-sharp';
             iconSpan.textContent = iconName;
+            if (type === 'error') iconSpan.classList.add('text-red-600', 'dark:text-red-300');
+            else if (type === 'warning') iconSpan.classList.add('text-yellow-600', 'dark:text-yellow-300');
+            else if (type === 'success') iconSpan.classList.add('text-green-600', 'dark:text-green-300');
+            else iconSpan.classList.add('text-blue-600', 'dark:text-blue-300');
+            
             modalIconContainer.appendChild(iconSpan);
-            modalIconContainer.className = `mx-auto flex items-center justify-center h-12 w-12 rounded-full mb-3 ${iconColorClass}`;
             messageModal.classList.remove('hidden');
         }
 
-        modalCloseButton.addEventListener('click', () => {
-            messageModal.classList.add('hidden');
+        modalCloseButton.addEventListener('click', () => messageModal.classList.add('hidden'));
+
+        // --- Theme Toggle ---
+        themeToggle.addEventListener('click', () => {
+            document.documentElement.classList.toggle('dark');
+            const isDark = document.documentElement.classList.contains('dark');
+            themeIcon.textContent = isDark ? 'dark_mode' : 'light_mode';
+            localStorage.setItem('theme', isDark ? 'dark' : 'light');
+        });
+
+        // --- Conditional UI for Alert Sensitivity ---
+        function toggleAlertSensitivity() {
+            if (supervisorContext.value === 'music_analysis') {
+                alertSensitivityContainer.classList.add('hidden');
+            } else {
+                alertSensitivityContainer.classList.remove('hidden');
+            }
+        }
+        supervisorContext.addEventListener('change', toggleAlertSensitivity);
+        
+
+        // --- Timer Functions ---
+        function startTimer() { 
+            recordingStartTime = new Date();
+            recordingTimer.classList.remove('hidden');
+            timerInterval = setInterval(updateTimer, 1000);
+        }
+        function stopTimer() { 
+            if (timerInterval) clearInterval(timerInterval);
+            timerInterval = null;
+            recordingTimer.classList.add('hidden');
+            recordingStartTime = null;
+        }
+        function updateTimer() { 
+            if (!recordingStartTime) return;
+            const elapsed = Math.floor((new Date() - recordingStartTime) / 1000);
+            const h = String(Math.floor(elapsed / 3600)).padStart(2, '0');
+            const m = String(Math.floor((elapsed % 3600) / 60)).padStart(2, '0');
+            const s = String(elapsed % 60).padStart(2, '0');
+            timerDisplay.textContent = `${h}:${m}:${s}`;
+        }
+        function getCurrentTimestamp() { 
+            if (!recordingStartTime) return '00:00';
+            const elapsed = Math.floor((Date.now() - recordingStartTime.getTime()) / 1000);
+            const m = String(Math.floor(elapsed / 60)).padStart(2, '0');
+            const s = String(elapsed % 60).padStart(2, '0');
+            return `${m}:${s}`;
+        }
+
+        // --- Speech Recognition ---
+        function initializeSpeechRecognition() { 
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            if (!SpeechRecognition) {
+                statusMessage.textContent = 'Speech recognition not supported. Please use Chrome.';
+                showMessage('Compatibility Error', 'Speech recognition is not supported by your browser. Please use a modern version of Chrome or Edge.', 'error');
+                speechRecognitionInitialized = false;
+                updateButtonStates(); 
+                return false;
+            }
+
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = languageMap[inputLanguage.value] || 'en-US';
+
+            recognition.onstart = () => {
+                console.log("Speech recognition service has started.");
+                isRecording = true; startTimer(); updateButtonStates();
+                statusMessage.textContent = 'Monitoring active... Listening for audio input.';
+                segmentedTranscript = [];
+            };
+            recognition.onaudiostart = () => {
+                console.log('Audio capturing started by speech recognition.');
+            };
+            recognition.onaudioend = () => {
+                console.log('Audio capturing ended by speech recognition.');
+                 if (isRecording) { 
+                    console.warn('Audio capture ended unexpectedly during recording. Attempting restart.');
+                    try {
+                        if(recognition && isRecording) recognition.start();
+                    } catch (e) {
+                        console.error("Error restarting recognition after audioend:", e);
+                        stopAllActivities(); 
+                    }
+                }
+            };
+            recognition.onresult = (event) => {
+                console.log('Speech recognition result event:', event);
+                let interim = '', currentFinal = '';
+                for (let i = event.resultIndex; i < event.results.length; ++i) {
+                    if (event.results[i].isFinal) {
+                        const segment = event.results[i][0].transcript.trim();
+                        if (segment) { 
+                           currentFinal += segment + ' ';
+                           segmentedTranscript.push({ text: segment, timestamp: getCurrentTimestamp(), confidence: event.results[i][0].confidence || 0.8 });
+                        }
+                    } else {
+                        interim += event.results[i][0].transcript;
+                    }
+                }
+                if (currentFinal) finalTranscript += currentFinal;
+                transcriptArea.value = finalTranscript + interim;
+                transcriptArea.scrollTop = transcriptArea.scrollHeight;
+                checkAnalyzeButtonState();
+            };
+            recognition.onerror = (event) => {
+                console.error('Speech recognition error:', event.error, event.message);
+                let msg = `Speech recognition error: ${event.error}. ${event.message || ''}`;
+                if (event.error === 'no-speech') {
+                    msg = 'No speech detected. Monitoring continues...';
+                    if (isRecording && recognition) {
+                        try {
+                            console.log("No speech detected, attempting to restart recognition.");
+                            recognition.start();
+                        } catch (e) {
+                            console.error("Error restarting recognition on no-speech:", e);
+                            stopAllActivities();
+                        }
+                    }
+                } else if (event.error === 'audio-capture') {
+                    msg = 'Audio capture failed. Check microphone permissions and ensure no other app is using the mic.';
+                    stopAllActivities(); 
+                } else if (event.error === 'not-allowed') {
+                    msg = 'Microphone access denied. Please allow microphone access in browser settings.';
+                    stopAllActivities(); 
+                } else {
+                    stopAllActivities();
+                }
+                
+                statusMessage.textContent = msg;
+                if (event.error !== 'no-speech') { 
+                    showMessage('Recognition Error', msg, 'error');
+                }
+            };
+            recognition.onend = () => {
+                console.log("Speech recognition service has ended.");
+                if (isRecording) { 
+                    console.log("Recognition ended while still in recording state. Attempting to restart speech recognition for continuous monitoring.");
+                    setTimeout(() => { 
+                        if (isRecording && recognition) {
+                            try { 
+                                recognition.start(); 
+                            } catch(e){ 
+                                console.error("Restart failed after onend:", e); 
+                                stopAllActivities(); 
+                            }
+                        }
+                    }, 250); 
+                } else {
+                    updateButtonStates();
+                }
+            };
+            speechRecognitionInitialized = true;
+            updateButtonStates(); 
+            return true;
+        }
+        
+        // --- Microphone Handling ---
+        async function getMicrophoneList() { 
+            console.log('Attempting to get microphone list...');
+            micSelect.innerHTML = '<option value="">Loading microphones...</option>'; 
+            micSelect.disabled = true;
+            micSelect.dataset.micPermanentlyDisabled = "true"; 
+            testMicButton.disabled = true;
+            recordToggleButton.disabled = true;
+
+            if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+                statusMessage.textContent = 'Media device enumeration not supported.';
+                showMessage('Device Error', 'Your browser does not support listing media devices.', 'error');
+                console.error('enumerateDevices() not supported.');
+                micSelect.innerHTML = '<option value="">Not supported</option>';
+                updateButtonStates();
+                return; 
+            }
+
+            try {
+                console.log('Requesting user media for microphone access...');
+                const tempStream = await navigator.mediaDevices.getUserMedia({ audio: true, video: false });
+                console.log('User media access granted.');
+                tempStream.getTracks().forEach(track => track.stop()); 
+                console.log('Temporary stream stopped.');
+
+                const devices = await navigator.mediaDevices.enumerateDevices();
+                console.log('Enumerated devices:', devices);
+                const audioInputDevices = devices.filter(device => device.kind === 'audioinput');
+                console.log('Filtered audio input devices:', audioInputDevices);
+                
+                micSelect.innerHTML = ''; 
+
+                if (audioInputDevices.length > 0) {
+                    micSelect.appendChild(new Option('Default Microphone', '')); 
+                    audioInputDevices.forEach((device, index) => {
+                        micSelect.appendChild(new Option(device.label || `Microphone ${index + 1}`, device.deviceId));
+                    });
+                    micSelect.disabled = false;
+                    micSelect.dataset.micPermanentlyDisabled = "false";
+                    statusMessage.textContent = 'Microphones loaded. Select one to test or start monitoring.';
+                } else {
+                    micSelect.innerHTML = '<option value="">No microphones found</option>';
+                    statusMessage.textContent = 'No microphones found. Connect a microphone and grant permission.';
+                    showMessage('Microphone Error', 'No microphones were found. Please connect a microphone and ensure your browser has permission to access it.', 'warning');
+                }
+            } catch (err) {
+                console.error('Error accessing microphones:', err.name, err.message);
+                micSelect.innerHTML = '<option value="">Access denied or error</option>';
+                let userMessage = 'Error accessing microphones. ';
+                if (err.name === 'NotAllowedError' || err.name === 'PermissionDeniedError') {
+                    userMessage += 'Permission denied. Please grant microphone access in your browser settings.';
+                } else if (err.name === 'NotFoundError' || err.name === 'DevicesNotFoundError') { 
+                    userMessage += 'No microphone found. Please connect a microphone.';
+                } else {
+                    userMessage += `Details: ${err.message || err.name}`;
+                }
+                statusMessage.textContent = userMessage;
+                showMessage('Microphone Access Error', userMessage, 'error');
+            }
+            updateButtonStates(); 
+        }
+
+        micSelect.addEventListener('change', (event) => { 
+            currentSelectedMicId = event.target.value;
+            statusMessage.textContent = `Microphone '${micSelect.options[micSelect.selectedIndex].text}' selected.`;
+            if (isRecording) { 
+                console.log("Microphone changed during recording. Stopping and re-initializing.");
+                stopAllActivities(); 
+                statusMessage.textContent += ' Click "Start Monitoring" to use the new microphone.';
+            }
         });
         
-        window.addEventListener('keydown', (event) => {
-            if (event.key === 'Escape' && !messageModal.classList.contains('hidden')) {
-                messageModal.classList.add('hidden');
+        recordToggleButton.addEventListener('click', async () => {
+            if (!speechRecognitionInitialized || !recognition) {
+                showMessage('Error', 'Speech recognition not available or not initialized. Please ensure microphone permissions are granted.', 'error');
+                console.error("Attempted to start monitoring but recognition not ready.");
+                return;
+            }
+
+            if (isRecording) {
+                console.log("Stopping monitoring via toggle button.");
+                isRecording = false; // Set state before stopping recognition to prevent auto-restart from onend
+                if (recognition) recognition.stop();
+                stopTimer();
+                statusMessage.textContent = 'Monitoring stopped.';
+                updateButtonStates();
+                return;
+            }
+
+            try {
+                console.log('Starting monitoring via toggle button...');
+                if (currentStream) { // Stop any existing test stream
+                    currentStream.getTracks().forEach(track => track.stop());
+                    currentStream = null;
+                }
+                
+                transcriptArea.value = ''; 
+                finalTranscript = '';
+                segmentedTranscript = [];
+
+                recognition.lang = languageMap[inputLanguage.value] || 'en-US'; 
+                recognition.start();
+                // isRecording will be set to true in recognition.onstart
+            } catch (error) {
+                console.error('Error starting monitoring:', error);
+                showMessage('Monitoring Error', `Could not start monitoring: ${error.message}`, 'error');
+                isRecording = false; 
+                updateButtonStates();
             }
         });
 
-        // --- Gemini API Interaction (Unchanged from previous version) ---
-        async function getAnalysisFromGemini(transcript, contextKey) {
-            const apiKey = ""; 
-            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            const { prompt, schema } = getPromptAndSchemaForContext(transcript, contextKey);
-            let chatHistory = [{ role: "user", parts: [{ text: prompt }] }];
-            const payload = {
-                contents: chatHistory,
-                generationConfig: {
-                    responseMimeType: "application/json",
-                    responseSchema: schema
+
+        // --- Mic Test Visualization ---
+        function createAudioBars() { 
+            audioBars.innerHTML = '';
+            for (let i = 0; i < 20; i++) {
+                const bar = document.createElement('div');
+                bar.className = 'audio-bar'; bar.style.height = '2px';
+                audioBars.appendChild(bar);
+            }
+        }
+        function updateAudioVisualization() { 
+            if (!analyser || !isTesting) return;
+            const dataArray = new Uint8Array(analyser.frequencyBinCount);
+            analyser.getByteFrequencyData(dataArray);
+            const bars = audioBars.children;
+            const step = Math.floor(dataArray.length / bars.length);
+            for (let i = 0; i < bars.length; i++) {
+                bars[i].style.height = Math.max(2, (dataArray[i * step] / 255) * 40) + 'px';
+            }
+            testAnimationId = requestAnimationFrame(updateAudioVisualization);
+        }
+        testMicButton.addEventListener('click', async () => { 
+            if (isTesting) { stopMicTest(); return; } // If already testing, this click stops it
+            try {
+                isTesting = true; 
+                updateButtonStates(); 
+                const constraints = { audio: currentSelectedMicId ? { deviceId: { exact: currentSelectedMicId } } : true, video: false };
+                console.log('Attempting to get user media for mic test with constraints:', constraints);
+                currentStream = await navigator.mediaDevices.getUserMedia(constraints);
+                console.log('Mic test stream acquired.');
+                if (!audioContextObj) audioContextObj = new (window.AudioContext || window.webkitAudioContext)();
+                await audioContextObj.resume(); 
+                const source = audioContextObj.createMediaStreamSource(currentStream);
+                analyser = audioContextObj.createAnalyser();
+                analyser.fftSize = 256; source.connect(analyser);
+                micTestVisualizer.classList.remove('hidden'); createAudioBars(); updateAudioVisualization();
+                statusMessage.textContent = 'Testing microphone... Speak to see audio levels.';
+                testMicButton.innerHTML = '<span class="material-icons-sharp mr-2">stop</span> Stop Test';
+            } catch (error) {
+                console.error('Error testing microphone:', error);
+                showMessage('Microphone Test Failed', `Could not access microphone: ${error.message}`, 'error');
+                stopMicTest(); 
+            }
+        });
+        function stopMicTest() { 
+            console.log('Stopping microphone test.');
+            isTesting = false; 
+            if (testAnimationId) cancelAnimationFrame(testAnimationId); testAnimationId = null;
+            if (currentStream) currentStream.getTracks().forEach(track => track.stop()); currentStream = null;
+            if (audioContextObj && audioContextObj.state === 'running') audioContextObj.suspend(); 
+            micTestVisualizer.classList.add('hidden');
+            testMicButton.innerHTML = '<span class="material-icons-sharp mr-2">volume_up</span> Test Microphone';
+            statusMessage.textContent = 'Microphone test stopped.';
+            updateButtonStates(); 
+        }
+
+        // --- File Upload & Handling (Drag & Drop) ---
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => { 
+            dropZone.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false); 
+        });
+        function preventDefaults(e) { e.preventDefault(); e.stopPropagation(); }
+
+        ['dragenter', 'dragover'].forEach(eventName => { 
+            dropZone.addEventListener(eventName, () => dropZone.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => { 
+            dropZone.addEventListener(eventName, () => dropZone.classList.remove('dragover'), false);
+        });
+
+        dropZone.addEventListener('drop', handleDrop, false);
+        audioFile.addEventListener('change', handleFileSelect); 
+
+        function handleDrop(e) { 
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            if (files.length) {
+                audioFile.files = files; 
+                handleFileSelect(); 
+            }
+        }
+        
+        function handleFileSelect() { 
+            const file = audioFile.files[0];
+            if (file) {
+                fileNameDisplay.textContent = file.name;
+                transcribeFileButton.disabled = false;
+                statusMessage.textContent = `File "${file.name}" selected. Ready to transcribe.`;
+
+                if (file.lastModified) {
+                    const lastModifiedDate = new Date(file.lastModified);
+                    const year = lastModifiedDate.getFullYear();
+                    const month = String(lastModifiedDate.getMonth() + 1).padStart(2, '0');
+                    const day = String(lastModifiedDate.getDate()).padStart(2, '0');
+                    const hours = String(lastModifiedDate.getHours()).padStart(2, '0');
+                    const minutes = String(lastModifiedDate.getMinutes()).padStart(2, '0');
+                    audioTimestamp.value = `${year}-${month}-${day}T${hours}:${minutes}`;
                 }
+                checkAnalyzeButtonState(); 
+            } else {
+                fileNameDisplay.textContent = '';
+                transcribeFileButton.disabled = true;
+            }
+        }
+
+        // --- Transcription ---
+        transcribeFileButton.addEventListener('click', async () => { 
+            if (!audioFile.files[0]) {
+                showMessage('No File', 'Please select an audio file first.', 'warning');
+                return;
+            }
+            
+            const selectedService = transcriptionService.value;
+            const currentTranscriptionApiKey = transcriptionApiKeyInput.value; 
+
+            if (!currentTranscriptionApiKey && (selectedService === 'openai' || selectedService === 'gemini' || selectedService === 'groq')) { 
+                let serviceName = transcriptionService.options[transcriptionService.selectedIndex].text;
+                showMessage('API Key Required', `A Transcription API key is required for ${serviceName}. Please enter it in the 'API Configuration' section.`, 'warning');
+                return;
+            }
+
+            fileTranscribeLoader.classList.remove('hidden');
+            transcribeFileButton.disabled = true;
+            statusMessage.textContent = `Transcribing ${audioFile.files[0].name}...`;
+            transcriptArea.value = ''; 
+
+            try {
+                let transcript = '';
+                if (selectedService === 'groq') transcript = await transcribeWithGroq(audioFile.files[0], currentTranscriptionApiKey);
+                else if (selectedService === 'openai') transcript = await transcribeWithOpenAI(audioFile.files[0], currentTranscriptionApiKey);
+                else if (selectedService === 'gemini') transcript = await transcribeWithGemini(audioFile.files[0], currentTranscriptionApiKey);
+                
+                transcriptArea.value = transcript;
+                finalTranscript = transcript; 
+                statusMessage.textContent = `Transcription complete for ${audioFile.files[0].name}. Ready for analysis.`;
+                showMessage('Transcription Successful', `File "${audioFile.files[0].name}" transcribed.`, 'success');
+                checkAnalyzeButtonState();
+            } catch (error) {
+                console.error('Transcription error:', error);
+                statusMessage.textContent = `Transcription failed: ${error.message}`;
+                showMessage('Transcription Failed', `Could not transcribe the file. ${error.message}`, 'error');
+            } finally {
+                fileTranscribeLoader.classList.add('hidden');
+                transcribeFileButton.disabled = false;
+            }
+        });
+        
+        async function transcribeWithGroq(file, apiKey) { 
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('model', 'whisper-large-v3'); 
+            if (inputLanguage.value && inputLanguage.value !== 'auto') formData.append('language', inputLanguage.value);
+            formData.append('response_format', 'text');
+
+            const response = await fetch('https://api.groq.com/openai/v1/audio/transcriptions', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${apiKey}` },
+                body: formData
+            });
+            if (!response.ok) { const err = await response.text(); throw new Error(`Groq API: ${response.status} - ${err}`);}
+            return await response.text();
+        }
+        async function transcribeWithOpenAI(file, apiKey) { 
+            const formData = new FormData();
+            formData.append('file', file);
+            formData.append('model', 'whisper-1');
+            if (inputLanguage.value && inputLanguage.value !== 'auto') formData.append('language', inputLanguage.value);
+            
+            const response = await fetch('https://api.openai.com/v1/audio/transcriptions', {
+                method: 'POST',
+                headers: { 'Authorization': `Bearer ${apiKey}` },
+                body: formData
+            });
+            if (!response.ok) { const err = await response.json(); throw new Error(err.error?.message || `OpenAI API: ${response.status}`);}
+            const result = await response.json(); return result.text;
+        }
+        async function transcribeWithGemini(file, apiKey ) { 
+            const base64Audio = await new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => resolve(reader.result.split(',')[1]);
+                reader.onerror = reject;
+                reader.readAsDataURL(file);
+            });
+            const mimeType = file.type || 'audio/mpeg';
+            let prompt = "Transcribe this audio. ";
+             if (inputLanguage.value && inputLanguage.value !== 'auto') {
+                prompt += `The language is ${languageMap[inputLanguage.value]}.`;
+            }
+
+            const payload = {
+                contents: [{
+                    parts: [
+                        { text: prompt },
+                        { inline_data: { mime_type: mimeType, data: base64Audio } }
+                    ]
+                }]
             };
-            statusMessage.textContent = `Analyzing with context: ${analysisContextSelect.options[analysisContextSelect.selectedIndex].text}...`;
-            const response = await fetch(apiUrl, {
+            const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro-latest:generateContent?key=${apiKey}`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(payload)
             });
-            if (!response.ok) {
-                const errorBody = await response.text();
-                console.error("Gemini API Error Response Body:", errorBody);
-                throw new Error(`API request failed with status ${response.status}: ${response.statusText}. Details: ${errorBody}`);
-            }
+            if (!response.ok) { const err = await response.json(); throw new Error(err.error?.message || `Gemini API for Transcription: ${response.status}`);}
             const result = await response.json();
-            if (result.candidates && result.candidates.length > 0 &&
-                result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length > 0 && result.candidates[0].content.parts[0].text) {
+            if (result.candidates?.[0]?.content?.parts?.[0]?.text) return result.candidates[0].content.parts[0].text;
+            throw new Error('No transcription returned from Gemini.');
+        }
+
+
+        // --- Analysis ---
+        analyzeButton.addEventListener('click', async () => { 
+            const transcriptToAnalyze = transcriptArea.value.trim();
+            if (!transcriptToAnalyze) {
+                showMessage('No Transcript', 'Please provide a transcript (via recording or file) before analyzing.', 'warning');
+                return;
+            }
+            
+            const currentAnalysisService = analysisServiceSelect.value;
+            const currentAnalysisApiKey = analysisApiKeyInput.value; 
+
+            if (!currentAnalysisApiKey || (currentAnalysisApiKey === "YOUR_GEMINI_API_KEY_HERE" && currentAnalysisService === "gemini")) { 
+                 let keyPrompt = "An API key is required for analysis. Please enter it in the 'API Configuration > Analysis API Key' field.";
+                if (currentAnalysisService === "gemini") keyPrompt = "A Google Generative Language API key is required for Gemini analysis. Please enter it for the Analysis Service.";
+                else if (currentAnalysisService === "groq") keyPrompt = "A Groq API key is required for Groq analysis. Please enter it for the Analysis Service.";
+                showMessage('API Key Required', keyPrompt, 'warning');
+                return;
+            }
+
+            analysisLoader.classList.remove('hidden');
+            analyzeButton.disabled = true;
+            statusMessage.textContent = 'Analyzing transcript...';
+            resultsContainer.classList.add('hidden'); 
+
+            try {
+                const context = supervisorContext.value;
+                const sensitivity = supervisorContext.value === 'music_analysis' ? 'medium' : alertSensitivity.value; 
+                
+                const analysisResults = await performAdvancedAnalysis(transcriptToAnalyze, context, sensitivity, currentAnalysisApiKey, currentAnalysisService, segmentedTranscript);
+                displayAnalysisResults(analysisResults);
+                statusMessage.textContent = 'Analysis complete.';
+                showMessage('Analysis Complete', 'Results are displayed below.', 'success');
+            } catch (error) {
+                console.error('Analysis error:', error);
+                let userErrorMessage = `Could not analyze the transcript. ${error.message}`;
+                 if (error.message && error.message.toLowerCase().includes("api key not valid")) {
+                    userErrorMessage = `Analysis failed: The provided Analysis API key is not valid for the selected service (${currentAnalysisService.toUpperCase()}). Please ensure a valid API key is entered.`;
+                } else if (error.message && error.message.toLowerCase().includes("quota") ) {
+                     userErrorMessage = `Analysis failed: API quota exceeded for the selected service (${currentAnalysisService.toUpperCase()}). Please check your API project quotas.`;
+                }
+                statusMessage.textContent = userErrorMessage;
+                showMessage('Analysis Failed', userErrorMessage, 'error');
+            } finally {
+                analysisLoader.classList.add('hidden');
+                analyzeButton.disabled = false; 
+            }
+        });
+
+        async function performAdvancedAnalysis(transcript, context, sensitivity, apiKey, service, transcriptSegments = []) {
+            const useSegments = transcriptSegments.length > 0 && (context === 'nanny_supervisor' || context === 'caregiver_supervisor');
+            
+            const prompt = generateAnalysisPrompt(
+                useSegments ? transcriptSegments.map(s => `[${s.timestamp}] ${s.text}`).join('\n') : transcript,
+                context,
+                sensitivity,
+                useSegments 
+            );
+            
+            console.log(`Analysis Prompt for ${service} (first 500 chars):`, prompt.substring(0,500)); 
+
+            let apiUrl = '';
+            let payload = {};
+            let headers = { 'Content-Type': 'application/json' };
+
+            if (service === 'gemini') {
+                const model = "gemini-1.5-flash-latest"; 
+                apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
+                payload = {
+                    contents: [{ parts: [{ text: prompt }] }],
+                    generationConfig: { responseMimeType: "application/json" } 
+                };
+            } else if (service === 'groq') {
+                const model = "llama3-8b-8192"; 
+                apiUrl = `https://api.groq.com/openai/v1/chat/completions`;
+                headers['Authorization'] = `Bearer ${apiKey}`;
+                payload = {
+                    model: model,
+                    messages: [
+                        { role: "system", content: "You are an expert audio content analyst. Respond ONLY with a single, valid JSON object based on the user's request. Do not include any other explanatory text or markdown formatting around the JSON." },
+                        { role: "user", content: prompt }
+                    ],
+                    temperature: 0.2, 
+                    response_format: { type: "json_object" } 
+                };
+            } else {
+                throw new Error(`Unsupported analysis service: ${service}`);
+            }
+
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: headers,
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                const errorText = await response.text();
+                console.error(`${service.toUpperCase()} API Error Response for Analysis:`, errorText);
                 try {
-                    const parsedJson = JSON.parse(result.candidates[0].content.parts[0].text);
-                    statusMessage.textContent = 'Analysis complete.';
+                    const errorJson = JSON.parse(errorText);
+                    if (errorJson.error && errorJson.error.message) {
+                        throw new Error(`Analysis API error (${service}): ${response.status} - ${errorJson.error.message}`);
+                    }
+                } catch (e) { /* Parsing failed, use raw text */ }
+                throw new Error(`Analysis API error (${service}): ${response.status} - ${errorText}`);
+            }
+
+            const result = await response.json();
+
+            let analysisText;
+            if (service === 'gemini') {
+                analysisText = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            } else if (service === 'groq') {
+                analysisText = result.choices?.[0]?.message?.content;
+            }
+
+
+            if (analysisText) {
+                try {
+                    // Sometimes models wrap JSON in markdown, try to extract it
+                    const jsonMatch = analysisText.match(/```json\n([\s\S]*?)\n```/);
+                    const extractedJson = jsonMatch ? jsonMatch[1] : analysisText;
+                    const parsedJson = JSON.parse(extractedJson);
+                    console.log("Parsed Analysis JSON:", parsedJson);
                     return parsedJson;
                 } catch (e) {
-                    console.error("Failed to parse JSON response from Gemini:", e);
-                    console.error("Raw text from Gemini:", result.candidates[0].content.parts[0].text);
-                    statusMessage.textContent = 'Error parsing analysis. Raw text logged to console.';
-                    throw new Error("Failed to parse analysis JSON. The AI might have returned an unexpected format.");
+                    console.error('Failed to parse AI response as JSON:', e, "\nRaw text from AI:", analysisText);
+                    throw new Error('Invalid AI response format. Expected JSON. Received: ' + analysisText.substring(0,100) + "...");
                 }
+            } else if (result.promptFeedback && result.promptFeedback.blockReason && service === 'gemini') { 
+                 console.error('Prompt blocked by API:', result.promptFeedback);
+                 let blockMessage = `Analysis request was blocked: ${result.promptFeedback.blockReason}.`;
+                 if (result.promptFeedback.safetyRatings && result.promptFeedback.safetyRatings.length > 0) {
+                     blockMessage += " Categories: " + result.promptFeedback.safetyRatings.map(r => `${r.category} (${r.probability})`).join(', ');
+                 }
+                 throw new Error(blockMessage);
+            }
+            else {
+                console.error(`No analysis content returned from ${service.toUpperCase()}:`, result);
+                throw new Error(`No analysis content returned from ${service.toUpperCase()}. The response structure might be unexpected.`);
+            }
+        }
+
+        function generateAnalysisPrompt(transcript, context, sensitivity, usingSegments = false) { 
+            let specificInstructions = "";
+            switch(context) {
+                case 'nanny_supervisor':
+                    specificInstructions = `Focus on child-adult interactions. Identify tone (patience, frustration, engagement, anger, joy, sadness), language (praise, clear instructions, scolding, yelling, inappropriate words, baby talk appropriateness), activities (play, learning, feeding, arguments, neglect), and any safety concerns (crying, distress, harsh discipline, accidents, hazards mentioned). Prioritize alerts for negative interactions or safety issues. Timestamps are crucial if provided.`;
+                    break;
+                case 'caregiver_supervisor':
+                    specificInstructions = `Focus on caregiver-elderly interactions. Identify tone (respect, impatience, empathy, condescension, kindness), language (clear communication, shouting, respectful address), care activities (assistance with daily tasks, medication reminders, conversation, neglect, rough handling), and signs of well-being or distress (pain expression, confusion, loneliness, happiness). Prioritize alerts for neglect or disrespectful behavior. Timestamps are crucial.`;
+                    break;
+                case 'music_analysis':
+                    specificInstructions = `Analyze lyrical content for themes (e.g., love, loss, social commentary, joy, anger), sentiment (positive, negative, neutral, mixed), explicit language (rate severity if present: mild, moderate, strong). Describe vocal delivery (e.g., emotional range, style like rapping/singing, clarity, strain, power) and overall mood/genre impression of the song (e.g., melancholic ballad, energetic pop, aggressive rock). "Alerts" should be observations on these artistic elements.`;
+                    break;
+                case 'therapy_monitor':
+                    specificInstructions = `Identify key emotional expressions (e.g., sadness, anxiety, anger, hope, relief), recurring themes or topics discussed, patient's self-reflection, therapist's interventions (e.g., validation, clarification, challenge, empathy), and indicators of therapeutic alliance (e.g., collaboration, disagreement, trust). Avoid diagnosing. Focus on observable communication patterns. "Alerts" could be significant emotional shifts or critical topics.`;
+                    break;
+                case 'education_monitor':
+                    specificInstructions = `Assess clarity of explanation, student/teacher engagement (e.g., questions, participation, lack of response), accuracy of information presented (if possible to determine from text), pacing, and use of encouraging language. "Alerts" could be points of confusion, disengagement, or potential misinformation.`;
+                    break;
+                case 'customer_service_quality':
+                    specificInstructions = `Evaluate agent's politeness, empathy, active listening, efficiency in addressing customer's issue, clarity of information/solution provided, and overall customer sentiment (e.g., satisfied, frustrated, confused). Identify if the issue was resolved. "Alerts" for unresolved issues, rudeness, or significant customer frustration.`;
+                    break;
+                default:
+                    specificInstructions = `Provide a general analysis of the transcript content, focusing on main topics, speaker sentiment, and any notable events or communication patterns.`;
+            }
+
+
+            const timestampNote = usingSegments ? "The transcript includes [MM:SS] timestamps for segments. Use these in your analysis for 'timestamp' fields." : "Estimate timestamps if possible (e.g., 'early part', 'middle', 'towards the end'), or use 'N/A'.";
+
+            // Added instruction for speaker differentiation attempt
+            const speakerDifferentiationNote = "If the transcript suggests multiple speakers, try to differentiate them in your analysis (e.g., 'Speaker A said...', 'Child responded...'), even if formal speaker labels are not provided in the input transcript.";
+
+            return `
+You are an expert audio content analyst. Analyze the following transcript based on the provided context and sensitivity.
+Return a JSON object with the structure:
+{
+  "tone_alerts": [
+    {
+      "timestamp": "MM:SS or 'N/A' or time period descriptor",
+      "severity": "critical|warning|info|positive", 
+      "alert_type": "e.g., Harsh Tone, Inappropriate Language, Positive Engagement, Distress Detected, Lyrical Theme, Key Insight, Off-topic, Customer Frustration, Issue Resolution",
+      "description": "Detailed description of the event or finding. Be specific.",
+      "snippet": "Relevant text excerpt (max 50 words, accurately capturing the essence).",
+      "recommendation": "Suggested action or observation (e.g., 'Review interaction immediately', 'Acknowledge positive behavior', 'Note lyrical complexity', 'Further discussion on X needed', 'Agent needs coaching on Y')."
+    }
+  ],
+  "interaction_summaries": [
+    {
+      "timestamp": "MM:SS or time period (e.g., '00:00-02:30', 'around 05:10')",
+      "type": "e.g., Conversation, Activity, Song Chorus, Emotional Peak, Topic Shift, Problem Description, Solution Offered, Argument, Storytelling",
+      "summary": "Brief, neutral summary of what happened or was discussed in this segment.",
+      "participants": "e.g., Nanny and Child, Caregiver and Patient, Vocalist, Therapist and Client, Educator and Student, Agent and Customer, or 'N/A' or speaker labels if discernible (Speaker 1, Speaker 2)",
+      "mood_tone": "Overall mood/tone during this segment (e.g., Playful, Tense, Melancholic, Energetic, Anxious, Calm, Professional, Frustrated, Satisfied)."
+    }
+  ],
+  "overall_assessment": {
+    "safety_score": "1-10 (10 is best, N/A if not applicable e.g. music, or for contexts where safety isn't primary like 'education_monitor'. Base this on the presence and severity of negative alerts vs positive ones related to safety/well-being.)",
+    "key_concerns_count": "Number of critical/warning alerts (integer).",
+    "key_positives_count": "Number of positive alerts/interactions or key positive insights (integer).",
+    "summary_text": "A brief overall summary of the audio content (2-4 sentences), tailored to the context. Highlight the most significant findings.",
+    "recommendations": ["Actionable general recommendation 1 based on findings", "Actionable general recommendation 2, if applicable"]
+  }
+}
+
+CONTEXT: ${supervisorContext.options[supervisorContext.selectedIndex].text}
+SENSITIVITY: ${sensitivity} (low=major issues, medium=balanced, high=detailed supervision and nuanced findings)
+${timestampNote}
+${speakerDifferentiationNote}
+SPECIFIC INSTRUCTIONS: ${specificInstructions}
+
+TRANSCRIPT:
+${transcript}
+
+Ensure your entire response is a single, valid JSON object.
+For "snippet", pick the most relevant short excerpt.
+For "music_analysis", "safety_score" should be "N/A". Alerts should focus on lyrical/musical aspects. Severity for music can be 'info' for observations or 'warning' for very explicit content if context implies sensitivity.
+For contexts like "therapy_monitor", "education_monitor", "customer_service_quality", alerts might be insights, topic adherence, or quality metrics. Adapt severity ('info' for insights, 'warning' for deviations from good practice, 'critical' for major issues).
+If the transcript is very short, uninformative, or mostly silence, reflect this in the summaries and assessment (e.g., "Transcript too short for detailed analysis").
+Be objective. Base findings on the provided transcript.
+If multiple distinct events occur, create multiple alerts or summaries.
+The "description" in "tone_alerts" should be more detailed than "alert_type".
+"recommendation" in "tone_alerts" should be specific to that alert.
+"summary_text" in "overall_assessment" should synthesize the main points.
+"recommendations" in "overall_assessment" should be broader takeaways.
+`;
+        }
+        
+        function displayAnalysisResults(analysis) { 
+            toneAlertsArea.innerHTML = '';
+            interactionSummariesArea.innerHTML = '';
+            
+            const existingOverallAssessment = resultsContainer.querySelector('.overall-assessment-block');
+            if (existingOverallAssessment) {
+                existingOverallAssessment.remove();
+            }
+
+            resultsContainer.classList.remove('hidden');
+
+            if (analysis.tone_alerts && analysis.tone_alerts.length > 0) {
+                analysis.tone_alerts.forEach((alert, index) => toneAlertsArea.appendChild(createAlertElement(alert, `tone-${index}`)));
             } else {
-                 let errorMessage = "No valid analysis content received from the AI.";
-                if (result.promptFeedback && result.promptFeedback.blockReason) {
-                    errorMessage += ` Blocked due to: ${result.promptFeedback.blockReason}.`;
-                    if (result.promptFeedback.safetyRatings) {
-                         errorMessage += ` Safety ratings: ${JSON.stringify(result.promptFeedback.safetyRatings)}`;
+                toneAlertsArea.innerHTML = `<p class="text-gray-600 dark:text-gray-400 text-sm">${supervisorContext.value === 'music_analysis' ? 'No specific lyrical/vocal points highlighted.' : '✅ No concerning tone alerts detected.'}</p>`;
+            }
+
+            if (analysis.interaction_summaries && analysis.interaction_summaries.length > 0) {
+                analysis.interaction_summaries.forEach((summary, index) => interactionSummariesArea.appendChild(createSummaryElement(summary, `summary-${index}`)));
+            } else {
+                interactionSummariesArea.innerHTML = '<p class="text-gray-600 dark:text-gray-400 text-sm">No interaction summaries available.</p>';
+            }
+
+            if (analysis.overall_assessment) {
+                const assessment = analysis.overall_assessment;
+                const assessmentElement = document.createElement('div');
+                assessmentElement.className = 'mt-6 p-4 bg-gray-50 dark:bg-gray-700/50 rounded-lg col-span-full overall-assessment-block'; // Light mode bg change
+                
+                let safetyScoreDisplay = assessment.safety_score !== "N/A" ? `
+                    <div class="text-2xl font-bold ${assessment.safety_score >= 7 ? 'text-green-600' : assessment.safety_score >= 4 ? 'text-yellow-600' : 'text-red-600'}">${assessment.safety_score}/10</div>
+                    <div class="text-gray-700 dark:text-gray-300">Safety Score</div>` : 
+                    `<div class="text-xl font-bold text-gray-700 dark:text-gray-300">N/A</div>
+                     <div class="text-gray-700 dark:text-gray-300">Safety Score</div>`;
+
+                assessmentElement.innerHTML = `
+                    <h3 class="font-semibold text-blue-700 dark:text-blue-300 mb-3 text-lg">📊 Overall Assessment</h3>
+                    <p class="text-sm text-gray-800 dark:text-gray-200 mb-3">${assessment.summary_text || "No overall summary provided."}</p>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-sm mb-3">
+                        <div class="text-center p-2 bg-white dark:bg-gray-600 rounded-md shadow-sm">${safetyScoreDisplay}</div>
+                        <div class="text-center p-2 bg-white dark:bg-gray-600 rounded-md shadow-sm">
+                            <div class="text-2xl font-bold text-red-600">${assessment.key_concerns_count || 0}</div>
+                            <div class="text-gray-700 dark:text-gray-300">Key Concerns</div>
+                        </div>
+                        <div class="text-center p-2 bg-white dark:bg-gray-600 rounded-md shadow-sm">
+                            <div class="text-2xl font-bold text-green-600">${assessment.key_positives_count || 0}</div>
+                            <div class="text-gray-700 dark:text-gray-300">Key Positives</div>
+                        </div>
+                    </div>
+                    ${assessment.recommendations && assessment.recommendations.length > 0 ? `
+                        <div>
+                            <h4 class="font-medium text-blue-700 dark:text-blue-300 mb-1">Recommendations:</h4>
+                            <ul class="text-sm space-y-1 list-disc list-inside text-gray-800 dark:text-gray-200">
+                                ${assessment.recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                            </ul>
+                        </div>
+                    ` : '<p class="text-sm text-gray-600 dark:text-gray-400">No specific recommendations provided.</p>'}
+                `;
+                resultsContainer.appendChild(assessmentElement);
+            }
+        }
+        function createAlertElement(alert, idSuffix) { 
+            const alertDiv = document.createElement('div');
+            let severityClass = 'alert-info'; 
+            if (alert.severity === 'critical') severityClass = 'alert-critical';
+            else if (alert.severity === 'warning') severityClass = 'alert-warning';
+            else if (alert.severity === 'positive') severityClass = 'alert-positive';
+
+            alertDiv.className = `p-3 rounded-lg shadow-sm ${severityClass}`;
+            const iconMap = {'critical':'🚨','warning':'⚠️','info':'ℹ️','positive':'✅', 'N/A':'📄'};
+            const icon = iconMap[alert.severity] || iconMap['N/A'];
+            
+            alertDiv.innerHTML = `
+                <div class="flex items-start justify-between">
+                    <div class="flex-1">
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="text-lg">${icon}</span>
+                            <span class="font-medium text-sm text-gray-800 dark:text-gray-100">${(alert.alert_type || "Notification").replace(/_/g, ' ').toUpperCase()}</span>
+                            ${alert.timestamp && alert.timestamp !== 'N/A' ? `<span class="time-display">${alert.timestamp}</span>` : ''}
+                        </div>
+                        <p class="text-sm text-gray-700 dark:text-gray-200 mb-2">${alert.description || "No description."}</p>
+                        ${alert.snippet ? `
+                            <div class="text-xs bg-gray-100 dark:bg-gray-700 p-2 rounded mb-2 expandable-content text-gray-600 dark:text-gray-300" id="snippet-${idSuffix}">
+                                <strong>Context:</strong> "${alert.snippet}"
+                            </div>` : ''}
+                        ${alert.recommendation ? `<p class="text-xs italic text-gray-600 dark:text-gray-400 mt-1">Recommendation: ${alert.recommendation}</p>` : ''}
+                    </div>
+                    ${alert.snippet ? `<button onclick="toggleExpand('snippet-${idSuffix}')" class="ml-2 text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-200"><span class="material-icons-sharp text-lg">expand_more</span></button>` : ''}
+                </div>`;
+            return alertDiv;
+        }
+        function createSummaryElement(summary, idSuffix) { 
+            const summaryDiv = document.createElement('div');
+            summaryDiv.className = 'timeline-item pl-6 pb-4';
+            const iconMap = {'conversation':'💬','activity':'🎯','concern':'😟','positive_interaction':'😊', 'song_chorus':'🎶', 'emotional_peak':'📈', 'topic_shift': '↪️', 'problem_description': '❓', 'solution_offered': '💡'};
+            const icon = iconMap[summary.type.toLowerCase().replace(/\s+/g, '_')] || '📄';
+            let markerClass = '';
+            if (summary.type.toLowerCase().includes('concern')) markerClass = 'critical';
+            if (summary.type.toLowerCase().includes('positive')) markerClass = 'positive';
+
+            summaryDiv.innerHTML = `
+                <div class="timeline-marker ${markerClass}"></div>
+                <div class="bg-gray-50 dark:bg-gray-700/50 p-3 rounded-lg shadow-sm">
+                    <div class="flex items-center gap-2 mb-2">
+                        <span class="text-lg">${icon}</span>
+                        <span class="font-medium text-sm text-gray-800 dark:text-gray-100">${(summary.type || "Summary").replace(/_/g, ' ').toUpperCase()}</span>
+                        ${summary.timestamp && summary.timestamp !== 'N/A' ? `<span class="time-display">${summary.timestamp}</span>` : ''}
+                    </div>
+                    <p class="text-sm text-gray-700 dark:text-gray-200 mb-2">${summary.summary || "No summary."}</p>
+                    ${summary.participants && summary.participants !== 'N/A' ? `<p class="text-xs text-gray-600 dark:text-gray-400 mb-1"><strong>Participants:</strong> ${summary.participants}</p>` : ''}
+                    ${summary.mood_tone ? `<p class="text-xs text-gray-600 dark:text-gray-400 mb-2"><strong>Mood/Tone:</strong> ${summary.mood_tone}</p>` : ''}
+                    ${summary.snippet ? `
+                        <div class="text-xs bg-white dark:bg-gray-600 p-2 rounded expandable-content text-gray-600 dark:text-gray-300" id="summary-snippet-${idSuffix}">
+                            <strong>Transcript:</strong> "${summary.snippet}"
+                        </div>
+                        <button onclick="toggleExpand('summary-snippet-${idSuffix}')" class="text-xs text-blue-600 hover:text-blue-800 mt-1 dark:text-blue-400 dark:hover:text-blue-300">Show/Hide Transcript</button>` : ''}
+                </div>`;
+            return summaryDiv;
+        }
+        window.toggleExpand = (elementId) => {
+            const element = document.getElementById(elementId);
+            if (element) {
+                element.classList.toggle('expanded');
+                const button = element.nextElementSibling; // Assuming button is immediately after
+                if (button && button.tagName === 'BUTTON') {
+                    const icon = button.querySelector('.material-icons-sharp');
+                    if (icon) { // Check if icon exists
+                         icon.textContent = element.classList.contains('expanded') ? 'expand_less' : 'expand_more';
+                    } else { // If button is text-based
+                        button.textContent = element.classList.contains('expanded') ? 'Hide Transcript' : 'Show Transcript';
                     }
                 }
-                console.error("Unexpected Gemini API response structure:", result);
-                statusMessage.textContent = errorMessage;
-                throw new Error(errorMessage);
             }
-        }
+        };
 
-        function getPromptAndSchemaForContext(transcript, contextKey) {
-            let prompt = "";
-            let schema = {};
-            // --- Prompts and Schemas (Unchanged from previous version, kept for brevity) ---
-            switch (contextKey) {
-                case 'nanny':
-                    prompt = `You are an AI assistant analyzing a transcript of a nanny's interaction, presumably with a child. Review the following text. Identify: 1. Instances of inappropriate language or profanity. 2. Phrases suggesting frustration, anger, or extreme impatience from the nanny. 3. Positive interactions or affirmations. 4. Summarize the overall sentiment of the interaction. Be objective and stick to the provided text. Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            summary: { type: "STRING", description: "Overall summary of the interaction." },
-                            sentiment: { type: "STRING", description: "Overall sentiment (e.g., Positive, Negative, Mixed, Neutral)." },
-                            inappropriate_language: { type: "ARRAY", items: { type: "STRING" }, description: "List of inappropriate phrases/words used by the nanny." },
-                            moments_of_concern: { type: "ARRAY", items: { type: "STRING" }, description: "Phrases from the nanny indicating frustration, anger, or impatience." },
-                            positive_moments: { type: "ARRAY", items: { type: "STRING" }, description: "Positive phrases or interactions from the nanny." }
-                        }, required: ["summary", "sentiment", "inappropriate_language", "moments_of_concern", "positive_moments"]
-                    };
-                    break;
-                case 'lecture':
-                    prompt = `Act as a note-taking assistant. Summarize the following lecture transcript and extract the main topics and key learning points as a list of bullet points. Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            summary: { type: "STRING", description: "A concise summary of the lecture." },
-                            key_highlights: { type: "ARRAY", items: { type: "STRING" }, description: "Bullet points of main topics and key learning points." }
-                        }, required: ["summary", "key_highlights"]
-                    };
-                    break;
-                case 'elder_care':
-                    prompt = `Analyze this transcript of a conversation, likely involving an elderly person and a caregiver. Identify: 1. Any signs of confusion or disorientation from the elderly person. 2. Topics that seem off-context or indicate memory issues from the elderly person. 3. Any instances of neglectful or impatient language from the caregiver. 4. Supportive or positive interactions. Provide a brief summary and list any specific concerns. Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            summary: { type: "STRING", description: "Overall summary of the interaction." },
-                            elder_confusion_indicators: { type: "ARRAY", items: { type: "STRING" }, description: "Phrases indicating confusion or disorientation from the elderly person." },
-                            caregiver_concerns: { type: "ARRAY", items: { type: "STRING" }, description: "Instances of potentially neglectful or impatient language from the caregiver." },
-                            supportive_interactions: { type: "ARRAY", items: { type: "STRING" }, description: "Supportive or positive interactions noted." },
-                            general_concerns: { type: "ARRAY", items: { type: "STRING" }, description: "Other concerns noted from the conversation."}
-                        }, required: ["summary", "elder_confusion_indicators", "caregiver_concerns", "supportive_interactions", "general_concerns"]
-                    };
-                    break;
-                case 'business_meeting':
-                    prompt = `Review the following business meeting transcript. Provide: 1. A brief summary of the meeting's purpose and key discussion points. 2. A list of decisions made or agreements reached. 3. Action items assigned, if any (note who is responsible if mentioned, otherwise state 'Unassigned'). Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            meeting_summary: { type: "STRING", description: "Summary of the meeting's purpose and key discussion points." },
-                            decisions_agreements: { type: "ARRAY", items: { type: "STRING" }, description: "List of decisions made or agreements reached." },
-                            action_items: {
-                                type: "ARRAY",
-                                items: {
-                                    type: "OBJECT",
-                                    properties: {
-                                        task: { type: "STRING" },
-                                        assigned_to: { type: "STRING", description: "Person or group responsible (if mentioned, otherwise 'Unassigned')." }
-                                    }, required: ["task", "assigned_to"]
-                                },
-                                description: "Action items from the meeting."
-                            }
-                        }, required: ["meeting_summary", "decisions_agreements", "action_items"]
-                    };
-                    break;
-                case 'customer_service':
-                    prompt = `Analyze this customer service call transcript. Identify: 1. The customer's primary issue or reason for calling. 2. The agent's proposed solution or explanation. 3. Customer sentiment (e.g., satisfied, frustrated, neutral, or changes in sentiment) based on their language. 4. Agent's professionalism and politeness. 5. Whether the issue appears to be resolved by the end of the call. Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            customer_issue: { type: "STRING", description: "The customer's primary issue."},
-                            proposed_solution: { type: "STRING", description: "The agent's proposed solution or explanation."},
-                            customer_sentiment_summary: { type: "STRING", description: "Summary of the customer's sentiment and any notable changes."},
-                            agent_professionalism_summary: { type: "STRING", description: "Assessment of the agent's professionalism and politeness."},
-                            resolution_status: { type: "STRING", description: "Apparent status of issue resolution (e.g., Resolved, Not Resolved, Partially Resolved, Unclear)."}
-                        }, required: ["customer_issue", "proposed_solution", "customer_sentiment_summary", "agent_professionalism_summary", "resolution_status"]
-                    };
-                    break;
-                case 'journaling':
-                    prompt = `This is a voice diary entry. Analyze the transcript for: 1. Main topics discussed or reflected upon. 2. Predominant emotions or sentiments expressed (e.g., happy, sad, anxious, reflective). 3. Any recurring themes or concerns if this were part of a series (make general observations based on this single entry). Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            main_topics: { type: "ARRAY", items: { type: "STRING" }, description: "Main topics or themes discussed in the journal entry." },
-                            sentiment_analysis: { type: "STRING", description: "Overall sentiment and any notable emotional expressions." },
-                            key_reflections_or_events: { type: "ARRAY", items: { type: "STRING" }, description: "Significant reflections, insights, or events mentioned."}
-                        }, required: ["main_topics", "sentiment_analysis", "key_reflections_or_events"]
-                    };
-                    break;
-                case 'language_learning':
-                    prompt = `This is a recording of someone practicing speaking English. Analyze the transcript for: 1. Common phrases used. 2. Any obvious grammatical errors or awkward phrasing (be gentle and constructive). 3. Areas where fluency could be improved (e.g., hesitations, filler words). Provide brief overall feedback and positive points. Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            overall_feedback: { type: "STRING", description: "Brief overall feedback on the English speaking practice." },
-                            common_phrases_used: { type: "ARRAY", items: { type: "STRING" }, description: "Common phrases or vocabulary used by the speaker." },
-                            areas_for_improvement: { type: "ARRAY", items: { type: "STRING" }, description: "Constructive suggestions on grammar, pronunciation, or fluency." },
-                            positive_points: { type: "ARRAY", items: { type: "STRING" }, description: "What the speaker did well or positive aspects of their practice." }
-                        }, required: ["overall_feedback", "common_phrases_used", "areas_for_improvement", "positive_points"]
-                    };
-                    break;
-                case 'therapy_self_reflection':
-                     prompt = `This is a transcript of a self-reflective session, possibly like a personal therapy session. Analyze it for: 1. Key themes or issues discussed. 2. Emotional shifts or significant emotional expressions. 3. Insights or breakthroughs mentioned. 4. Any cognitive distortions or negative thought patterns evident (e.g., all-or-nothing thinking, overgeneralization - identify based on language). Provide a compassionate summary. Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            session_summary: { type: "STRING", description: "Compassionate summary of the self-reflective session." },
-                            key_themes: { type: "ARRAY", items: { type: "STRING" }, description: "Key themes or issues that emerged during the reflection." },
-                            emotional_expressions: { type: "ARRAY", items: { type: "STRING" }, description: "Notable emotional statements or shifts observed in the language." },
-                            insights_breakthroughs: { type: "ARRAY", items: { type: "STRING" }, description: "Moments of insight, realization, or breakthrough mentioned." },
-                            potential_cognitive_distortions: { type: "ARRAY", items: { type: "STRING" }, description: "Observed negative thought patterns or potential cognitive distortions based on the language used." }
-                        }, required: ["session_summary", "key_themes", "emotional_expressions", "insights_breakthroughs", "potential_cognitive_distortions"]
-                    };
-                    break;
-                default: // General
-                    prompt = `Analyze the following transcript. Provide a general summary and list key highlights or interesting points. Transcript: '${transcript}'`;
-                    schema = {
-                        type: "OBJECT",
-                        properties: {
-                            summary: { type: "STRING", description: "A general summary of the transcript." },
-                            highlights: { type: "ARRAY", items: { type: "STRING" }, description: "Key highlights or interesting points from the transcript." }
-                        }, required: ["summary", "highlights"]
-                    };
-            }
-            return { prompt, schema };
-        }
 
-        function displayResults(analysis, contextKey) {
-            resultsArea.innerHTML = ''; 
-            const title = document.createElement('h3');
-            title.className = 'text-lg font-semibold mb-2 text-gray-800 dark:text-gray-100';
-            title.textContent = `Analysis for: ${analysisContextSelect.options[analysisContextSelect.selectedIndex].text}`;
-            resultsArea.appendChild(title);
-            for (const key in analysis) {
-                if (analysis.hasOwnProperty(key)) {
-                    const value = analysis[key];
-                    const section = document.createElement('div');
-                    section.className = 'mb-3';
-                    const label = document.createElement('strong');
-                    label.className = 'block text-md capitalize text-gray-700 dark:text-gray-200';
-                    label.textContent = key.replace(/_/g, ' ') + ':';
-                    section.appendChild(label);
-                    if (Array.isArray(value)) {
-                        if (value.length > 0) {
-                            const ul = document.createElement('ul');
-                            ul.className = 'list-disc list-inside ml-4 mt-1 space-y-1';
-                            value.forEach(item => {
-                                const li = document.createElement('li');
-                                if (typeof item === 'object' && item !== null) {
-                                    let itemText = '';
-                                    if (item.task) itemText += `Task: ${item.task}`;
-                                    if (item.assigned_to) itemText += ` (Assigned to: ${item.assigned_to})`;
-                                    li.textContent = itemText.trim() || 'N/A'; 
-                                } else {
-                                   li.textContent = item || 'N/A'; 
-                                }
-                                ul.appendChild(li);
-                            });
-                            section.appendChild(ul);
-                        } else {
-                            const p = document.createElement('p');
-                            p.className = 'italic text-sm ml-4 mt-1';
-                            p.textContent = 'None identified.';
-                            section.appendChild(p);
-                        }
-                    } else if (typeof value === 'string') {
-                        const p = document.createElement('p');
-                        p.className = 'ml-4 mt-1';
-                        p.textContent = value || 'N/A'; 
-                        section.appendChild(p);
+        // --- UI State Management ---
+        function updateButtonStates() { 
+            const activityInProgress = isRecording || isTesting;
+            const micsAvailable = micSelect.dataset.micPermanentlyDisabled !== "true";
+            const speechRecReady = speechRecognitionInitialized && recognition;
+
+            [inputLanguage, supervisorContext, alertSensitivity, audioFile, 
+             transcriptionService, transcriptionApiKeyInput, analysisApiKeyInput, analysisServiceSelect, apiConfigToggle, dropZone]
+            .forEach(el => {
+                if (el) {
+                    el.disabled = activityInProgress; 
+                    if (el === dropZone) {
+                        el.style.pointerEvents = activityInProgress ? 'none' : 'auto';
+                        el.classList.toggle('opacity-50', activityInProgress);
                     }
-                     resultsArea.appendChild(section);
                 }
+            });
+            if(apiConfigToggle) { 
+                apiConfigToggle.disabled = activityInProgress;
+                apiConfigToggle.classList.toggle('opacity-50', activityInProgress);
+            }
+            
+            micSelect.disabled = activityInProgress || !micsAvailable;
+            
+            // Test button specific logic
+            if (isTesting) {
+                testMicButton.disabled = false; // Always allow stopping the test
+            } else {
+                testMicButton.disabled = activityInProgress || !micsAvailable;
+            }
+
+            // Record button specific logic
+            if (isRecording) {
+                recordToggleButton.disabled = false; // Always allow stopping the recording
+            } else {
+                recordToggleButton.disabled = activityInProgress || !micsAvailable || !speechRecReady;
+            }
+
+
+            transcribeFileButton.disabled = activityInProgress || !audioFile.files[0];
+            analyzeButton.disabled = activityInProgress || (!transcriptArea.value.trim() && !finalTranscript.trim());
+
+            recordToggleButton.classList.toggle('recording-active', isRecording);
+            recordIcon.textContent = isRecording ? 'stop' : 'mic';
+            recordButtonText.textContent = isRecording ? 'Stop Monitoring' : 'Start Monitoring';
+            if (isTesting) {
+                testMicButton.innerHTML = '<span class="material-icons-sharp mr-2">stop</span> Stop Test';
+            } else {
+                testMicButton.innerHTML = '<span class="material-icons-sharp mr-2">volume_up</span> Test Microphone';
             }
         }
 
-        // --- Initial Setup ---
-        function initializeApp() {
-            const storedTheme = localStorage.getItem('theme');
-            if (storedTheme === 'dark') {
+
+        function checkAnalyzeButtonState() { 
+            analyzeButton.disabled = isRecording || isTesting || (!transcriptArea.value.trim() && !finalTranscript.trim());
+        }
+        transcriptArea.addEventListener('input', checkAnalyzeButtonState);
+
+
+        function stopAllActivities() { 
+            if (isRecording) {
+                console.log("stopAllActivities called while recording. Stopping recognition.");
+                isRecording = false; // Set state BEFORE stopping recognition to prevent onend restart
+                if (recognition) recognition.stop(); 
+                stopTimer();
+                statusMessage.textContent = 'Monitoring stopped.';
+            }
+            if (isTesting) { 
+                console.log("stopAllActivities called while testing. Stopping mic test.");
+                stopMicTest(); 
+            }
+            finalTranscript = transcriptArea.value.trim(); 
+            updateButtonStates(); 
+        }
+        stopAllButton.addEventListener('click', stopAllActivities);
+        
+        // --- Initialization ---
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log('AI Audio Supervisor DOM ready.');
+            if (localStorage.getItem('theme') === 'dark' || 
+                (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
                 document.documentElement.classList.add('dark');
                 themeIcon.textContent = 'dark_mode';
             } else {
-                document.documentElement.classList.remove('dark'); 
+                document.documentElement.classList.remove('dark');
                 themeIcon.textContent = 'light_mode';
             }
-            getMicrophoneList(); // Populate microphone list on init
-            updateButtonStates(); 
-            checkAnalyzeButtonState();
 
-            if (window.location.protocol !== 'https:' && window.location.hostname !== 'localhost' && window.location.hostname !== '127.0.0.1') {
-                 showMessage(
-                    'HTTPS Required for Microphone',
-                    'For audio recording and microphone listing, this page needs to be served over HTTPS. Some features might be limited on HTTP.',
-                    'warning'
-                );
-            }
-        }
-
-        initializeApp();
+            loadApiSettings(); 
+            initializeSpeechRecognition(); 
+            getMicrophoneList(); 
+            toggleAlertSensitivity(); 
+            
+            statusMessage.textContent = 'App initialized. Configure API keys if needed, then select language, context, and microphone.';
+        });
 
     </script>
 </body>
